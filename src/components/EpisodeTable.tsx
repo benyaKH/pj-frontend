@@ -58,9 +58,10 @@ export default function EpisodeTable(
             .then(data => console.log(data));
     }
 
-
     var table = new DataTable('#example', {
         retrieve: true,
+        deferLoading: 57,
+        processing: true,
         data: episodes,
         columns: [
             { "data": 'number' },
@@ -82,20 +83,25 @@ export default function EpisodeTable(
 
     table.on('click', 'tbody tr', function () {
         let data = table.row(this).data();
-        
+
 
         alert('You clicked on ' + data[0] + "'s row");
     });
 
+
     const items = episodes.map((ep) => (
         <tr>
             <td> {ep['number']} </td>
-            <td> {ep['episodetitle']} </td>
+            <td><a href={`/Dashborad/Episode/${ep['_id']}`} target="_google"> {ep['episodetitle']} </a></td>
             <td> {ep['description']} </td>
-            <td> {ep['tags']} </td>
+            <td> {ep['tags']}
+
+            </td>
             <td>
-                <Button>Edit</Button>
-                <Button>Delete</Button>
+                <Group>
+                    <Button>Edit</Button>
+                    <Button>Delete</Button>
+                </Group>
             </td>
         </tr>
     ));
@@ -173,7 +179,7 @@ export default function EpisodeTable(
                     </tr>
                 </thead>
                 <tbody>
-
+                    {items}
                 </tbody>
             </table>
         </div>

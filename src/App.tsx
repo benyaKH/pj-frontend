@@ -11,6 +11,7 @@ import MainPage from './pages/main';
 import DashboardPage from './pages/dashboard';
 import StoryPage from './pages/storypage';
 import CategoryPage from './pages/category';
+import EpisodePage from './pages/episodepage';
 
 export default function App() {
 
@@ -103,6 +104,7 @@ export default function App() {
           <Route path='/Dashboard/:id' element={<StoryPage isAdmin={true}/>}></Route>
           <Route path='/Category/:id' element={<CategoryPage/>}></Route>
           <Route path='/Story/:id' element={<StoryPage isAdmin={false}/>}></Route>
+          <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true}/>}></Route>
         </Routes>
 
       </AppShell>
