@@ -24,6 +24,8 @@ export default function EpisodePage(
     const [characters, setChars] = useState<string[]>([]);
     const [Links, setLink] = useState('')
 
+    const [Edit, setEdit] = useState('')
+
     useEffect(() => {
         const fetchData = async () => {
 
@@ -42,7 +44,7 @@ export default function EpisodePage(
         <Pill>{tag}</Pill>
     ));
 
-    const showchars = tags.map((char) => (
+    const showchars = characters.map((char) => (
         <Pill>{char}</Pill>
     ));
 
@@ -51,25 +53,38 @@ export default function EpisodePage(
             <Stack
                 bg="var(--mantine-color-body)"
             >
-                <Image
-                    src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                    mah={300}
-                    alt="No way!"
-                />
+                <Stack px={rem(100)}>
                 Episode page
                 <Group>
                     <Text>{episodetitle}</Text>
+                    {props.isAdmin ?
+                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => setEdit('title')}>
+                                    <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                </ActionIcon> : <div></div>}
                 </Group>
                 <Group>
                 <Text>{description}</Text>
+                {props.isAdmin ?
+                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => setEdit('des')}>
+                                    <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                </ActionIcon> : <div></div>}
                 </Group>
                 <Group>
                 {showtags}
+                {props.isAdmin ?
+                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => setEdit('tags')}>
+                                    <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                </ActionIcon> : <div></div>}
                 </Group>
                 <Group>
                 {showchars}
+                {props.isAdmin ?
+                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => setEdit('chars')}>
+                                    <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                </ActionIcon> : <div></div>}
                 </Group>
                 <Button >Watch Episode</Button>
+                </Stack>
             </Stack>
         </AppShell.Main>
     );
