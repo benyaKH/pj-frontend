@@ -38,17 +38,20 @@ export default function CategoryPage() {
     ));
 
     return (
-        <AppShell.Main>
-            <Text>{params.id}</Text>
+        <AppShell.Main >
+            <Stack py={rem(25)}>
             <Stack
                 h={300}
                 bg="var(--mantine-color-body)"
                 px={rem(100)}
             >
+                <Text size={rem(40)} fw={700}>{params.id}</Text>
                 <Divider my="md" />
                 <SimpleGrid cols={4}>
                     {items}
                 </SimpleGrid>
+            </Stack>
+                
             </Stack>
             
         </AppShell.Main >);

@@ -6,6 +6,10 @@ import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import EpisodeTable from '../components/EpisodeTable';
 
+import ReactQuill from "react-quill";
+
+import "react-quill/dist/quill.snow.css";
+
 export default function StoryPage(
     props: {
         isAdmin: boolean
@@ -23,6 +27,31 @@ export default function StoryPage(
     const [category, setCategory] = useState('')
     const [IsEditName, setIsEditName] = useState(false)
     const [IsEditDEs, setIsEditDes] = useState(false)
+
+    const handleProcedureContentChange = (content: any) => {
+        setDescription(content);
+    };
+    const modules = {
+        toolbar: [
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ align: ["right", "center", "justify"] }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link"]
+        ]
+      };
+    const formats = [
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "blockquote",
+        "list",
+        "bullet",
+        "link",
+        "align"
+    ];
 
     useEffect(() => {
         const fetchData = async () => {
@@ -99,15 +128,15 @@ export default function StoryPage(
 
                     <Group>
                         {IsEditDEs ?
-                            <TextInput
-                                variant="unstyled"
-                                onChange={e => setDescription(e.target.value)}
+                            <ReactQuill
+                                theme="snow"
+                                modules={modules}
+                                formats={formats}
                                 value={description}
-
+                                onChange={handleProcedureContentChange}
                             /> :
-                            <Text size="lg">
-                                {description}
-                            </Text>
+                            <div className="Container" dangerouslySetInnerHTML={{__html: description}}></div>
+                            
                         }
                         {props.isAdmin ?
                             <ActionIcon variant="subtle" color='black' aria-label="EditDes" onClick={() => setIsEditDes(true)}>
@@ -116,7 +145,7 @@ export default function StoryPage(
                         {IsEditDEs ? <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button> : <div></div>}
                     </Group>
                     <Divider my="md" />
-                    <EpisodeTable stid= {params.id} isAdmin={props.isAdmin}></EpisodeTable>
+                    <EpisodeTable stid={params.id} isAdmin={props.isAdmin}></EpisodeTable>
                 </Stack>
             </Stack>
         </AppShell.Main>

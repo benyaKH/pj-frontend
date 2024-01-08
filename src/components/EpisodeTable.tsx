@@ -1,9 +1,12 @@
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
 import { IconNewSection } from '@tabler/icons-react';
 import { ActionIcon, Button, Card, Group, Image, Modal, TagsInput, Text, TextInput, rem } from '@mantine/core';
-import DataTable from 'datatables.net-dt';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
+import { FilterMatchMode } from 'primereact/api';
+import { InputText } from 'primereact/inputtext';
 
 export default function EpisodeTable(
     props: {
@@ -11,6 +14,10 @@ export default function EpisodeTable(
         isAdmin: boolean
     }) {
     const [opened, { open, close }] = useDisclosure(false);
+    const [filters, setFilters] = useState({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    })
+    const [globalFilterValue, setGlobalFilterValue] = useState('');
 
     const [episodes, setEpisodes] = useState([])
     const [number, setNumber] = useState('')
@@ -24,6 +31,23 @@ export default function EpisodeTable(
     const urlGetEpisodes = `http://localhost:3000/episodes/story/${props.stid}`
     const urlNewEpisodes = `http://localhost:3000/episodes`
 
+    const onGlobalFilterChange = (e: { target: { value: any; }; }) => {
+        const value = e.target.value;
+        let _filters = { ...filters };
+
+        _filters['global'].value = value;
+
+        setFilters(_filters);
+        setGlobalFilterValue(value);
+    };
+
+
+    function urlherf(id: any) {
+        if (props.isAdmin) {
+            return `/Dashborad/Episode/${id}`
+        } else return `/Episode/${id}`
+    }
+
     useEffect(() => {
         const fetchData = async () => {
 
@@ -35,6 +59,9 @@ export default function EpisodeTable(
                 .catch(e => console.log(e))
         }
         fetchData()
+
+
+
     }, [])
 
     const onSubmit = () => {
@@ -58,53 +85,26 @@ export default function EpisodeTable(
             .then(data => console.log(data));
     }
 
-    var table = new DataTable('#example', {
-        retrieve: true,
-        deferLoading: 57,
-        processing: true,
-        data: episodes,
-        columns: [
-            { "data": 'number' },
-            { "data": 'episodetitle' },
-            {
-                "data": 'description',
-                "defaultContent": ""
-            },
-            {
-                "data": 'tags',
-                "defaultContent": ""
-            },
-            {
-                "data": null,
-                "defaultContent": '<Button>Edit</Button> <Button>Delete</Button>',
-            }
-        ]
-    });
-
-    table.on('click', 'tbody tr', function () {
-        let data = table.row(this).data();
+    const columns = [
+        { field: 'number', header: 'No.' },
+        { field: 'episodetitle', header: 'Title' },
+        { field: 'description', header: 'Description' },
+        { field: 'tags', header: 'Tags' }
+    ];
 
 
-        alert('You clicked on ' + data[0] + "'s row");
-    });
+    const renderHeader = () => {
+        return (
+            <div className="flex justify-content-end">
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
+                </span>
+            </div>
+        );
+    };
 
-
-    const items = episodes.map((ep) => (
-        <tr>
-            <td> {ep['number']} </td>
-            <td><a href={`/Dashborad/Episode/${ep['_id']}`} target="_google"> {ep['episodetitle']} </a></td>
-            <td> {ep['description']} </td>
-            <td> {ep['tags']}
-
-            </td>
-            <td>
-                <Group>
-                    <Button>Edit</Button>
-                    <Button>Delete</Button>
-                </Group>
-            </td>
-        </tr>
-    ));
+    const header = renderHeader();
 
     return (
 
@@ -166,22 +166,13 @@ export default function EpisodeTable(
                         <IconNewSection style={{ width: '130%', height: '130%' }} stroke={1.5} />
                     </ActionIcon> : <div></div>}
             </Group>
-            <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-            <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-            <table id="example" className="display" width="100%" >
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Tags</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {items}
-                </tbody>
-            </table>
+            <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+            dataKey="id" filters={filters} filterDisplay="row" 
+            globalFilterFields={['number', 'episodetitle', 'description', 'tags']} header={header} emptyMessage="No customers found.">
+                {columns.map((col, i) => (
+                    <Column key={col.field} field={col.field} header={col.header} sortable />
+                ))}
+            </DataTable>
         </div>
 
 

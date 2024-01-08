@@ -43,7 +43,7 @@ export default function App() {
             <Group>
               <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
               <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-              SERCH STORY
+              SEARCH STORY
             </Group>
             <Group gap="xl" px="md">
               <Menu width={200} shadow="md" >
@@ -105,6 +105,7 @@ export default function App() {
           <Route path='/Category/:id' element={<CategoryPage/>}></Route>
           <Route path='/Story/:id' element={<StoryPage isAdmin={false}/>}></Route>
           <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true}/>}></Route>
+          <Route path='/Episode/:id' element={<EpisodePage isAdmin={false}/>}></Route>
         </Routes>
 
       </AppShell>
