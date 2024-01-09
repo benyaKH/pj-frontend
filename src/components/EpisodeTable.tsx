@@ -1,23 +1,26 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
-import { IconNewSection } from '@tabler/icons-react';
+import { IconEdit, IconNewSection, IconTrash } from '@tabler/icons-react';
 import { ActionIcon, Button, Card, Group, Image, Modal, TagsInput, Text, TextInput, rem } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
+import { Dialog } from 'primereact/dialog';
 
 export default function EpisodeTable(
     props: {
         stid: string | undefined;
         isAdmin: boolean
     }) {
-    const [opened, { open, close }] = useDisclosure(false);
+    
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
     const [globalFilterValue, setGlobalFilterValue] = useState('');
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [opened, { open, close }] = useDisclosure(false);
 
     const [episodes, setEpisodes] = useState([])
     const [number, setNumber] = useState('')
@@ -27,6 +30,8 @@ export default function EpisodeTable(
     const [characters, setChars] = useState<string[]>([]);
     const [Links, setLink] = useState('')
     const [StoryId, setStoryId] = useState(props.stid)
+
+
 
     const urlGetEpisodes = `http://localhost:3000/episodes/story/${props.stid}`
     const urlNewEpisodes = `http://localhost:3000/episodes`
@@ -64,7 +69,7 @@ export default function EpisodeTable(
 
     }, [])
 
-    const onSubmit = () => {
+    const onSubmitNew = () => {
         const payload = {
             number,
             episodetitle,
@@ -104,6 +109,25 @@ export default function EpisodeTable(
         );
     };
 
+    const onClick = () => {
+        if(selectedCustomer!=null){
+            window.location.href = `/Dashborad/Episode/${selectedCustomer._id}`
+        }
+    };
+
+    // const actionBodyTemplate = (rowData: any) => {
+    //     return (
+    //         <Group justify="center">
+    //             <ActionIcon variant="filled" color="#2CB5B5" aria-label="EditDes" onClick={() => editProduct(rowData)}>
+    //                 <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+    //             </ActionIcon>
+    //             <ActionIcon variant="filled" color="#FF6666" aria-label="EditDes" onClick={() => confirmDeleteProduct(rowData)}>
+    //                 <IconTrash style={{ width: '130%', height: '130%' }} stroke={1.5} />
+    //             </ActionIcon>
+    //         </Group>
+    //     );
+    // };
+
     const header = renderHeader();
 
     return (
@@ -115,7 +139,7 @@ export default function EpisodeTable(
                 </Text>
 
                 <Modal opened={opened} onClose={close} title="New Episode" centered>
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmitNew}>
                         <TextInput
                             withAsterisk
                             label="No."
@@ -167,11 +191,13 @@ export default function EpisodeTable(
                     </ActionIcon> : <div></div>}
             </Group>
             <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-            dataKey="id" filters={filters} filterDisplay="row" 
-            globalFilterFields={['number', 'episodetitle', 'description', 'tags']} header={header} emptyMessage="No customers found.">
+                dataKey="_id" filters={filters} filterDisplay="row" showGridlines
+                selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
+                globalFilterFields={['number', 'episodetitle', 'description', 'tags']} header={header} emptyMessage="No episodes found.">
                 {columns.map((col, i) => (
                     <Column key={col.field} field={col.field} header={col.header} sortable />
                 ))}
+                {/* <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column> */}
             </DataTable>
         </div>
 

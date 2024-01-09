@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Pill, Modal, TagsInput, Badge } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack,  ActionIcon, Button,  Modal, TagsInput, Badge } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -28,11 +28,8 @@ export default function EpisodePage(
     const [tags, setTags] = useState<string[]>([]);
     const [characters, setChars] = useState<string[]>([]);
     const [Links, setLink] = useState('')
-    const [opened, { open, close }] = useDisclosure(false);
+    const [opened, handlers] = useDisclosure(false);
     
-
-
-    const [Edit, setEdit] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,11 +47,6 @@ export default function EpisodePage(
         }
         fetchData()
     }, [])
-
-    const onEditClick = () => {
-        open ;
-        setPopupState('Edit Episode');
-    }
 
     const onSubmit = () => {
         const payload = {
@@ -112,10 +104,10 @@ export default function EpisodePage(
                         <Text size={rem(20)}>Episode {number} : {episodetitle}</Text>
                         {props.isAdmin ?
                         <Group>
-                            <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={open} >
+                            <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={()=>{handlers.open(); setPopupState('Edit Episode');}} >
                                 <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
                             </ActionIcon>
-                            <Button color="#FF6666" onClick={open}>Delete</Button>
+                            <Button color="#FF6666" onClick={()=>{handlers.open(); setPopupState('Delete Episode');}}>Delete</Button>
                         </Group>
                          : <div></div>}
                     </Group>
@@ -139,7 +131,7 @@ export default function EpisodePage(
                         }}>Watch Episode</Button>
                 </Stack>
             </Stack>
-            <Modal opened={opened&&(popupstate=='Edit Episode')} onClose={close} title={popupstate} centered>
+            <Modal opened={opened&&(popupstate=='Edit Episode')} onClose={()=>{handlers.close()}} title={popupstate} centered>
                 {popupstate=='Edit Episode' ?
                 <form onSubmit={onSubmit}>
                     <TextInput
@@ -203,57 +195,8 @@ export default function EpisodePage(
                 }
                 
             </Modal>
-            <Modal opened={opened&&(popupstate=='Delete Episode')} onClose={close} title={popupstate} centered>
-                {popupstate=='Edit Episode' ?
-                <form onSubmit={onSubmit}>
-                    <TextInput
-                        withAsterisk
-                        label="No."
-                        placeholder="your episode no."
-                        value={number}
-                        onChange={e => setNumber(e.target.value)}
-                    />
-                    <TextInput
-                        withAsterisk
-                        label="Title"
-                        placeholder="your episode title"
-                        value={episodetitle}
-                        onChange={e => setTitle(e.target.value)}
-                    />
-                    <TextInput
-                        label="Description"
-                        placeholder="your episode description"
-                        value={description}
-                        onChange={e => setDes(e.target.value)}
-                    />
-
-                    <TagsInput
-                        label="Tag"
-                        placeholder="Enter tag"
-                        clearable
-                        value={tags}
-                        onChange={setTags}
-                    />
-                    <TagsInput
-                        label="Characters"
-                        placeholder="Enter characters name"
-                        clearable
-                        value={characters}
-                        onChange={setChars}
-                    />
-                    <TextInput
-                        withAsterisk
-                        label="Link"
-                        placeholder="your episode link"
-                        value={Links}
-                        onChange={e => setLink(e.target.value)}
-                    />
-
-                    <Group justify="flex-end" mt="md">
-                        <Button type="submit" onClick={close} color="#2CB5B5">Submit</Button>
-                        <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
-                    </Group>
-                </form>:popupstate=='Delete Episode' ? 
+            <Modal opened={opened&&(popupstate=='Delete Episode')} onClose={()=>{handlers.close()}} title={popupstate} centered>
+                
                 <Stack>
                     <Text>Are you sure you want to delete this episode</Text>
                     <Text>Episode {number} : {episodetitle}</Text>
@@ -263,8 +206,7 @@ export default function EpisodePage(
                         <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
                     </Group>
                 </Stack> 
-                : <div></div>
-                }
+                
                 
             </Modal>
         </AppShell.Main>
