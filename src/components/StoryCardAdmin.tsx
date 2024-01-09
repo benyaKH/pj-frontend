@@ -9,7 +9,7 @@ export default function StoryCardAdmin(
         title: string;
         category: string;
         description: string
-        Ep: string
+        Ep: string[]
     }) {
 
     const [opened, { open, close }] = useDisclosure(false);

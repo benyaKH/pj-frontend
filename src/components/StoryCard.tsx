@@ -7,7 +7,7 @@ export default function StoryCard(
         title: string;
         category: string;
         description: string
-        Ep: number;
+        Ep: string[];
         isAdmin: boolean ;
     }) {
         const urlherf = () => {
@@ -43,7 +43,7 @@ export default function StoryCard(
                 {props.category}
             </Text>
             <Text mt="xs" size="xs" color='white'>
-                {props.Ep} episodes
+                {props.Ep.length} episodes
             </Text>
         </Card>
 

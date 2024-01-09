@@ -15,6 +15,7 @@ export default function DashboardPage() {
 
     const urlUserStory = "http://localhost:3000/stories/owner/658114029695bd4e23773d3b"
     const urlNewStory = "http://localhost:3000/stories"
+    const epL = ep?.length || 0;
 
 
 
@@ -25,7 +26,7 @@ export default function DashboardPage() {
                 method: "GET"
             })
                 .then(response => response.json())
-                .then(result => {setStories(result); setEp(result.episodeId)})
+                .then(result => setStories(result))
                 .catch(e => console.log(e))
         }
         fetchData()
@@ -50,7 +51,8 @@ export default function DashboardPage() {
 
 
     const items = stories.map((item) => (
-        <StoryCardAdmin stid={item['_id']}title={item['storyname']} category={item['category']} description={item['description']} Ep={ep.length}></StoryCardAdmin>
+        
+        <StoryCardAdmin stid={item['_id']}title={item['storyname']} category={item['category']} description={item['description']} Ep={item['episodeId']}></StoryCardAdmin>
 
     ));
 
