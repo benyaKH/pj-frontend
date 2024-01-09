@@ -7,7 +7,7 @@ export default function StoryCard(
         title: string;
         category: string;
         description: string
-        Ep: string;
+        Ep: number;
         isAdmin: boolean ;
     }) {
         const urlherf = () => {

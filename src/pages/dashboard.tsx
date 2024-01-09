@@ -9,6 +9,7 @@ import StoryCardAdmin from '../components/StoryCardAdmin';
 export default function DashboardPage() {
 
     const [stories, setStories] = useState([])
+    const [ep, setEp] = useState([])
     const [storyname, setStoryname] = useState('')
     const [category, setCategory] = useState('Anime')
 
@@ -24,7 +25,7 @@ export default function DashboardPage() {
                 method: "GET"
             })
                 .then(response => response.json())
-                .then(result => setStories(result))
+                .then(result => {setStories(result); setEp(result.episodeId)})
                 .catch(e => console.log(e))
         }
         fetchData()
@@ -49,7 +50,7 @@ export default function DashboardPage() {
 
 
     const items = stories.map((item) => (
-        <StoryCardAdmin stid={item['_id']}title={item['storyname']} category={item['category']} description={item['description']} Ep={item['episodeId']['length']}></StoryCardAdmin>
+        <StoryCardAdmin stid={item['_id']}title={item['storyname']} category={item['category']} description={item['description']} Ep={ep.length}></StoryCardAdmin>
 
     ));
 

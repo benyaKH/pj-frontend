@@ -111,7 +111,7 @@ export default function EpisodeTable(
 
     const onClick = () => {
         if(selectedCustomer!=null){
-            window.location.href = `/Dashborad/Episode/${selectedCustomer._id}`
+            window.location.href = urlherf(selectedCustomer._id)
         }
     };
 
