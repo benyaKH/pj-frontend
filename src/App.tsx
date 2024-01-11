@@ -14,6 +14,7 @@ import CategoryPage from './pages/category';
 import EpisodePage from './pages/episodepage';
 import { useState } from 'react';
 import LoginPage from './pages/loginpage';
+import { GoogleLogout } from 'react-google-login';
 
 export default function App() {
 
@@ -28,10 +29,11 @@ export default function App() {
   })
 
   const logOut = () => {
-    setName(null);
-}
+    localStorage.removeItem("username");
+    window.location.href = "/";
+  }
 
-
+  const clientId = "708607628638-b2883fsl4fnpomcqh7uadlr0ae36l8n6.apps.googleusercontent.com"
 
   return (
     <MantineProvider
@@ -98,7 +100,10 @@ export default function App() {
                         color='white'
                         onClick={logOut}
                       >
-                        sign out
+                        <GoogleLogout
+                        clientId={clientId}
+                        buttonText='Log out'
+                        onLogoutSuccess={logOut} />
                       </Menu.Item>
                     </div>
                     :
@@ -108,7 +113,6 @@ export default function App() {
                       </Menu.Item>
                       <Menu.Item
                         component="a"
-                        href="https://mantine.dev"
                         color='white'
                       >
                         sign up
