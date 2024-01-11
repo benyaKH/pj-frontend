@@ -9,6 +9,9 @@ import StoryCardAdmin from '../components/StoryCardAdmin';
 export default function DashboardPage() {
 
     const [stories, setStories] = useState([])
+    const [name, setName] = useState(() => {
+        return localStorage.getItem('username')
+    })
     const [ep, setEp] = useState([])
     const [storyname, setStoryname] = useState('')
     const [category, setCategory] = useState('Anime')
@@ -71,6 +74,9 @@ export default function DashboardPage() {
             >
                 <Text fw={500} py={rem(30)} size={rem(40)}  color='black' >
                     DASHBOARD
+                </Text>
+                <Text fw={250} py={rem(30)} size={rem(20)}  color='black' >
+                    {name}
                 </Text>
                 <Text fw={200} size="md"  color='black' py={rem(0)}>
                     you have {stories.length} boards

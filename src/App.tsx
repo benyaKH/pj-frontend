@@ -3,15 +3,17 @@
 import '@mantine/core/styles.css';
 import { Route, Routes } from 'react-router-dom';
 
-import {  IconUserCircle, IconCategory2 } from '@tabler/icons-react';
+import { IconUserCircle, IconCategory2 } from '@tabler/icons-react';
 
 import { useDisclosure } from '@mantine/hooks';
-import { MantineProvider, AppShell, Burger, Group,rem, UnstyledButton, Menu } from '@mantine/core';
+import { MantineProvider, AppShell, Burger, Group, rem, UnstyledButton, Menu, Stack } from '@mantine/core';
 import MainPage from './pages/main';
 import DashboardPage from './pages/dashboard';
 import StoryPage from './pages/storypage';
 import CategoryPage from './pages/category';
 import EpisodePage from './pages/episodepage';
+import { useState } from 'react';
+import LoginPage from './pages/loginpage';
 
 export default function App() {
 
@@ -19,7 +21,17 @@ export default function App() {
   const Usericon = <IconUserCircle style={{ width: rem(25), height: rem(25) }} />;
 
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [IsLogin, setIsLogin] = useState(false);
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
+  const [name, setName] = useState(() => {
+    return localStorage.getItem('username')
+  })
+
+  const logOut = () => {
+    setName(null);
+}
+
+
 
   return (
     <MantineProvider
@@ -76,16 +88,33 @@ export default function App() {
                 </Menu.Target>
 
                 <Menu.Dropdown bg="#521125">
-                  <Menu.Item component="a" href="/Dashboard" color='white'>
-                    veiw profile
-                  </Menu.Item>
-                  <Menu.Item
-                    component="a"
-                    href="https://mantine.dev"
-                    color='white'
-                  >
-                    Sign out
-                  </Menu.Item>
+                  {name ?
+                    <div>
+                      <Menu.Item component="a" href="/Dashboard" color='white'>
+                        veiw profile
+                      </Menu.Item>
+                      <Menu.Item
+                        component="a"
+                        color='white'
+                        onClick={logOut}
+                      >
+                        sign out
+                      </Menu.Item>
+                    </div>
+                    :
+                    <div>
+                      <Menu.Item component="a" href="/login" color='white'>
+                        sign in
+                      </Menu.Item>
+                      <Menu.Item
+                        component="a"
+                        href="https://mantine.dev"
+                        color='white'
+                      >
+                        sign up
+                      </Menu.Item>
+                    </div>
+                  }
                 </Menu.Dropdown>
               </Menu>
 
@@ -99,13 +128,14 @@ export default function App() {
         </AppShell.Navbar>
 
         <Routes>
+          <Route path='/login' element={<LoginPage />}></Route>
           <Route path='/' element={<MainPage />}></Route>
           <Route path='/Dashboard' element={<DashboardPage />}></Route>
-          <Route path='/Dashboard/:id' element={<StoryPage isAdmin={true}/>}></Route>
-          <Route path='/Category/:id' element={<CategoryPage/>}></Route>
-          <Route path='/Story/:id' element={<StoryPage isAdmin={false}/>}></Route>
-          <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true}/>}></Route>
-          <Route path='/Episode/:id' element={<EpisodePage isAdmin={false}/>}></Route>
+          <Route path='/Dashboard/:id' element={<StoryPage isAdmin={true} />}></Route>
+          <Route path='/Category/:id' element={<CategoryPage />}></Route>
+          <Route path='/Story/:id' element={<StoryPage isAdmin={false} />}></Route>
+          <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true} />}></Route>
+          <Route path='/Episode/:id' element={<EpisodePage isAdmin={false} />}></Route>
         </Routes>
 
       </AppShell>
