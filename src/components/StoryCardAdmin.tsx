@@ -32,7 +32,7 @@ export default function StoryCardAdmin(
     }
     return (
         <div ref={ref}>
-            <StoryCard id={props.stid} category={props.category}title={props.title} description={props.description} Ep={props.Ep} isAdmin={true}></StoryCard>
+            <StoryCard id={props.stid} category={props.category}title={props.title} description={props.description} Ep={props.Ep.length} isAdmin={true}></StoryCard>
             <Modal opened={opened} onClose={close} title="Are you sure delete this question?" centered>
                 <Text size='xs'>If you delete the question you can’t recover it.</Text>
                 <Group justify="flex-end" mt="md">
