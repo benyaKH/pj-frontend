@@ -95,16 +95,20 @@ export default function App() {
                       <Menu.Item component="a" href="/Dashboard" color='white'>
                         veiw profile
                       </Menu.Item>
-                      <Menu.Item
-                        component="a"
-                        color='white'
-                        onClick={logOut}
-                      >
+                      
                         <GoogleLogout
-                        clientId={clientId}
-                        buttonText='Log out'
-                        onLogoutSuccess={logOut} />
-                      </Menu.Item>
+                          render={renderProps => (
+                            <Menu.Item
+                              component="a"
+                              color='white'
+                              onClick={renderProps.onClick} >
+                              log out
+                            </Menu.Item>
+                          )}
+                          clientId={clientId}
+                          buttonText='Log out'
+                          onLogoutSuccess={logOut} />
+                      
                     </div>
                     :
                     <div>

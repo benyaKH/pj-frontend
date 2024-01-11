@@ -26,7 +26,7 @@ export default function LoginPage() {
 
     const onSuccess = (res: any) => {
         window.location.href = '/'
-        localStorage.setItem('username', res.profileObj.name)
+        localStorage.setItem('username', res.profileObj.googleId)
         console.log('success', res)
     }
 

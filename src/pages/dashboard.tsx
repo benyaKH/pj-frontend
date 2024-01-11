@@ -16,7 +16,7 @@ export default function DashboardPage() {
     const [storyname, setStoryname] = useState('')
     const [category, setCategory] = useState('Anime')
 
-    const urlUserStory = "http://localhost:3000/stories/owner/658114029695bd4e23773d3b"
+    const urlUserStory = `http://localhost:3000/stories/owner/${name}`
     const urlNewStory = "http://localhost:3000/stories"
     const epL = ep?.length || 0;
 
@@ -39,7 +39,7 @@ export default function DashboardPage() {
         const payload = {
             storyname,
             category,
-            ownerId: '658114029695bd4e23773d3b'
+            ownerId: name
 
         }
         const requestOptions = {
@@ -74,9 +74,6 @@ export default function DashboardPage() {
             >
                 <Text fw={500} py={rem(30)} size={rem(40)}  color='black' >
                     DASHBOARD
-                </Text>
-                <Text fw={250} py={rem(30)} size={rem(20)}  color='black' >
-                    {name}
                 </Text>
                 <Text fw={200} size="md"  color='black' py={rem(0)}>
                     you have {stories.length} boards
