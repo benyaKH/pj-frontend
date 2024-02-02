@@ -1,5 +1,5 @@
 import '@mantine/core/styles.css';
-import { Button, Group, Modal, Text } from '@mantine/core';
+import { Button, Container, Group, Modal, Text, rem } from '@mantine/core';
 import StoryCard from './StoryCard';
 import { useDisclosure, useHover } from '@mantine/hooks';
 
@@ -41,9 +41,11 @@ export default function StoryCardAdmin(
                 </Group>
             </Modal>
             {hovered ?
-                <Button variant="outline" onClick={open} color="#FF6666">
+            <Container py="sm">
+                <Button variant="outline" onClick={open} color="#FF6666" fullWidth >
                     Delete
-                </Button> : <div></div>}
+                </Button>
+            </Container> : <div></div>}
         </div>
 
     );

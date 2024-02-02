@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -17,6 +17,7 @@ export default function StoryPage(
 ) {
 
     const params = useParams()
+    const [IsPublic, setIsPublic] = useState(false)
 
     const urlStory = `http://localhost:3000/stories/${params.id}`
     const urleditStory = `http://localhost:3000/stories/${params.id}`
@@ -33,13 +34,13 @@ export default function StoryPage(
     };
     const modules = {
         toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline", "strike", "blockquote"],
-          [{ align: ["right", "center", "justify"] }],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["link"]
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ["bold", "italic", "underline", "strike", "blockquote"],
+            [{ align: ["right", "center", "justify"] }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["link"]
         ]
-      };
+    };
     const formats = [
         "header",
         "bold",
@@ -60,7 +61,8 @@ export default function StoryPage(
                 method: "GET"
             })
                 .then(response => response.json())
-                .then(result => { setStoryname(result.storyname); setDescription(result.description); setCategory(result.category) })
+                .then(result => { setStoryname(result.storyname); setDescription(result.description); 
+                    setCategory(result.category); setCategory(result.IsPublic) })
                 .catch(e => console.log(e))
         }
         fetchData()
@@ -83,6 +85,23 @@ export default function StoryPage(
         setIsEditDes(false)
     }
 
+    const onPublic = () => {
+
+        setIsPublic(!IsPublic)
+        const payload = {
+            IsPublic
+        }
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        };
+        fetch(urleditStory, requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+    }
+
+
     const onSubmitDelete = () => {
         const requestOptions = {
             method: 'DELETE',
@@ -103,6 +122,7 @@ export default function StoryPage(
                 />
                 <Stack px={rem(100)}>
                     <Stack gap={rem(1)}>
+                        <Group justify="space-between">
                         <Group>
                             {IsEditName ?
                                 <TextInput
@@ -121,6 +141,10 @@ export default function StoryPage(
                             {IsEditName ? <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button> : <div></div>}
                         </Group>
 
+                            {props.isAdmin ?
+                                <Switch checked={!IsPublic} onChange={onPublic} label={"Public"} mt="md" /> : <div></div>}
+                        </Group>
+
                         <Text td="underline" color='gray'>
                             {category}
                         </Text>
@@ -135,8 +159,8 @@ export default function StoryPage(
                                 value={description}
                                 onChange={handleProcedureContentChange}
                             /> :
-                            <div className="Container" dangerouslySetInnerHTML={{__html: description}}></div>
-                            
+                            <div className="Container" dangerouslySetInnerHTML={{ __html: description }}></div>
+
                         }
                         {props.isAdmin ?
                             <ActionIcon variant="subtle" color='black' aria-label="EditDes" onClick={() => setIsEditDes(true)}>

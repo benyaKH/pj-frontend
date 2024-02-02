@@ -101,7 +101,7 @@ export default function EpisodePage(
                     Episode page
                     <Text size={rem(35)} fw={700}>{storyname}</Text>
                     <Group>
-                        <Text size={rem(20)}>Episode {number} : {episodetitle}</Text>
+                        <Text size={rem(24)} fw={500}>Episode {number} : {episodetitle}</Text>
                         {props.isAdmin ?
                         <Group>
                             <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={()=>{handlers.open(); setPopupState('Edit Episode');}} >
@@ -178,7 +178,7 @@ export default function EpisodePage(
                     />
 
                     <Group justify="flex-end" mt="md">
-                        <Button type="submit" onClick={close} color="#2CB5B5">Submit</Button>
+                        <Button type="submit" onClick={()=>{handlers.close()}} color="#2CB5B5">Submit</Button>
                         <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
                     </Group>
                 </form>:popupstate=='Delete Episode' ? 

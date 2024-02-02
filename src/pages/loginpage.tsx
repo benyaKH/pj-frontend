@@ -1,9 +1,11 @@
 import '@mantine/core/styles.css';
 
-import { AppShell, rem, Text, } from '@mantine/core';
+import { AppShell, Box, Button, Card, rem, Stack, Text, } from '@mantine/core';
 import { GoogleLogin, GoogleLogout } from 'react-google-login'
 import { gapi } from 'gapi-script'
 import { useEffect, useState } from 'react';
+
+import { IconBrandGoogleFilled } from '@tabler/icons-react';
 
 export default function LoginPage() {
 
@@ -39,25 +41,44 @@ export default function LoginPage() {
         localStorage.removeItem('username')
     }
 
+    const icon = <IconBrandGoogleFilled size={14} />;
+
     return (
         <AppShell.Main>
-            <Text fw={500} py={rem(30)} size={rem(40)} color='black' >
-                Login page
-            </Text>
-            {name ?
-                <div>
-                    <GoogleLogout
-                        clientId={clientId}
-                        buttonText='Log out'
-                        onLogoutSuccess={onLogout} />
-                </div> :
-                <GoogleLogin
-                    clientId={clientId}
-                    buttonText='Sign in with Google'
-                    onSuccess={onSuccess}
-                    onFailure={onFailure}
-                    cookiePolicy='single_host_origin'
-                    isSignedIn={true} />}
+            <Stack align="center" py={rem(100)} >
+                <Card shadow="sm" radius="md" withBorder >
+                    <Card.Section bg="#521125">
+                        <Text fw={500} px={rem(30)} py="lg" size={rem(40)} color='white'  >
+                            Login page
+                        </Text>
+                    </Card.Section>
+                    
+                    {name ?
+                        <Box py={rem(80)}>
+                            <GoogleLogout
+                                clientId={clientId}
+                                buttonText='Log out'
+                                onLogoutSuccess={onLogout}
+                            />
+                        </Box> :
+                        <Box py={rem(50)}>
+                            <GoogleLogin
+                                render={renderProps => (
+                                    <Button justify="center" fullWidth leftSection={icon} mt="md" variant="outline" color="#521125" onClick={renderProps.onClick}>
+                                        Sign in with Google
+                                    </Button>
+
+                                )}
+                                clientId={clientId}
+                                buttonText='Sign in with Google'
+                                onSuccess={onSuccess}
+                                onFailure={onFailure}
+                                cookiePolicy='single_host_origin'
+                                isSignedIn={true} />
+                        </Box>}
+                </Card>
+
+            </Stack>
         </AppShell.Main>
     );
 

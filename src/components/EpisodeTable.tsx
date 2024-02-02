@@ -2,8 +2,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
 import { IconEdit, IconNewSection, IconTrash } from '@tabler/icons-react';
-import { ActionIcon, Button, Card, Group, Image, Modal, TagsInput, Text, TextInput, rem } from '@mantine/core';
-import { SetStateAction, useEffect, useState } from 'react';
+import { ActionIcon, Badge, Button, Card, Group, Image, Modal, TagsInput, Text, TextInput, rem } from '@mantine/core';
+import { JSXElementConstructor, ReactElement, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
@@ -14,7 +14,7 @@ export default function EpisodeTable(
         stid: string | undefined;
         isAdmin: boolean
     }) {
-    
+
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
@@ -110,7 +110,7 @@ export default function EpisodeTable(
     };
 
     const onClick = () => {
-        if(selectedCustomer!=null){
+        if (selectedCustomer != null) {
             window.location.href = urlherf(selectedCustomer._id)
         }
     };
@@ -130,6 +130,12 @@ export default function EpisodeTable(
 
     const header = renderHeader();
 
+    const tagBodyTemplate = (episodes) => {
+        return episodes.tags.map((tag) => (
+            <Badge color="#48E1E1">{tag}</Badge>))
+        
+    };
+
     return (
 
         <div>
@@ -139,6 +145,7 @@ export default function EpisodeTable(
                 </Text>
 
                 <Modal opened={opened} onClose={close} title="New Episode" centered>
+                    
                     <form onSubmit={onSubmitNew}>
                         <TextInput
                             withAsterisk
@@ -194,9 +201,10 @@ export default function EpisodeTable(
                 dataKey="_id" filters={filters} filterDisplay="row" showGridlines
                 selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
                 globalFilterFields={['number', 'episodetitle', 'description', 'tags']} header={header} emptyMessage="No episodes found.">
-                {columns.map((col, i) => (
-                    <Column key={col.field} field={col.field} header={col.header} sortable />
-                ))}
+                <Column key='number' field='number' header='No.' sortable />
+                <Column key='episodetitle' field='episodetitle' header='Title' sortable />
+                <Column key='description' field='description' header='Description' sortable />
+                <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
                 {/* <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column> */}
             </DataTable>
         </div>
