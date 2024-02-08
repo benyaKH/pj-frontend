@@ -57,7 +57,10 @@ export default function App() {
             <Group>
               <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
               <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
+              
               SEARCH STORY
+              
+
             </Group>
             <Group gap="xl" px="md">
               <Menu width={200} shadow="md" >

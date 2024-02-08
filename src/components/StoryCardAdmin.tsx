@@ -2,6 +2,7 @@ import '@mantine/core/styles.css';
 import { Button, Container, Group, Modal, Text, rem } from '@mantine/core';
 import StoryCard from './StoryCard';
 import { useDisclosure, useHover } from '@mantine/hooks';
+import { useState } from 'react';
 
 export default function StoryCardAdmin(
     props: {
@@ -12,6 +13,7 @@ export default function StoryCardAdmin(
         Ep: string[]
     }) {
 
+    
     const [opened, { open, close }] = useDisclosure(false);
     const { hovered, ref } = useHover();
     const urldeleteStory = `http://localhost:3000/stories/${props.stid}`

@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge, Overlay, AspectRatio } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import EpisodeTable from '../components/EpisodeTable';
 import ReactQuill from "react-quill";
 
 import "react-quill/dist/quill.snow.css";
+import { useHover } from '@mantine/hooks';
 
 export default function StoryPage(
     props: {
@@ -120,6 +121,7 @@ export default function StoryPage(
                     mah={300}
                     alt="No way!"
                 />
+                
                 <Stack px={rem(100)}>
                     <Stack gap={rem(1)}>
                         <Group justify="space-between">

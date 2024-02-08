@@ -185,7 +185,7 @@ export default function EpisodePage(
                 <Stack>
                     <Text>Are you sure you want to delete this episode</Text>
                     <Text>Episode {number} : {episodetitle}</Text>
-                    <Text>{description}</Text>
+                    <Text lineClamp={3}>{description}</Text>
                     <Group justify="flex-end" mt="md">
                         <Button type="submit" onClick={onDelete} color="#2CB5B5">Submit</Button>
                         <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
@@ -200,7 +200,7 @@ export default function EpisodePage(
                 <Stack>
                     <Text>Are you sure you want to delete this episode</Text>
                     <Text>Episode {number} : {episodetitle}</Text>
-                    <Text>{description}</Text>
+                    <Text lineClamp={3}>{description}</Text>
                     <Group justify="flex-end" mt="md">
                         <Button type="submit" onClick={onDelete} color="#2CB5B5">Submit</Button>
                         <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
