@@ -2,7 +2,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
 import { IconEdit, IconNewSection, IconTrash, IconUpload, IconX, IconSearch } from '@tabler/icons-react';
-import { ActionIcon, Badge, Button, FileButton, Group, Modal, TagsInput, Text, TextInput, UnstyledButton, rem } from '@mantine/core';
+import { ActionIcon, Badge, Button, FileButton, FileInput, Group, Modal, Stack, TagsInput, Text, TextInput, UnstyledButton, rem } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { FilterMatchMode } from 'primereact/api';
@@ -112,29 +112,21 @@ export default function EpisodeTable(
         };
     }
 
-
     const onSubmitNews = () => {
         data.forEach((element) => {
-            console.log(element)
-        })
-        // const payload = {
-        //     number,
-        //     episodetitle,
-        //     description,
-        //     tags,
-        //     characters,
-        //     Links,
-        //     StoryId,
 
-        // }
-        // const requestOptions = {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(payload)
-        // };
-        // fetch(urlNewEpisodes, requestOptions)
-        //     .then(response => response.json())
-        //     .then(data => console.log(data));
+            element["StoryId"] = StoryId
+            console.log(element)
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(element)
+            };
+            fetch(urlNewEpisodes, requestOptions)
+                .then(response => response.json())
+                .then(data => console.log(data));
+        })
     }
 
 
@@ -155,19 +147,6 @@ export default function EpisodeTable(
         if (selectedCustomer != null) {
             window.location.href = urlherf(selectedCustomer._id)
         }
-    };
-
-    const actionBodyTemplate = (rowData: any) => {
-        return (
-            <Group justify="center">
-                <ActionIcon variant="outline" radius="xl" size="lg" color="#2CB5B5" aria-label="EditDes" >
-                    <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                </ActionIcon>
-                <ActionIcon variant="outline" radius="xl" size="lg" color="#FF6666" aria-label="EditDes" >
-                    <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                </ActionIcon>
-            </Group>
-        );
     };
 
     const header = renderHeader();
@@ -237,52 +216,18 @@ export default function EpisodeTable(
                             </Group>
                         </form> :
                         <div>
-                            {file && (
-                                <Text size="sm" ta="center" mt="sm">
-                                    Picked file: {file.name}
-                                </Text>
-                            )}
-                            <Group justify="center">
-                                <Dropzone
-                                    onDrop={(files) => console.log('accepted files', files)}
-                                    onReject={(files) => console.log('rejected files', files)}
-                                    maxSize={5 * 1024 ** 2}
-                                    accept={IMAGE_MIME_TYPE}
-                                    {...props}
-                                >
-                                    <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
-                                        <Dropzone.Accept>
-                                            <IconUpload
-                                                style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
-                                                stroke={1.5}
-                                            />
-                                        </Dropzone.Accept>
-                                        <Dropzone.Reject>
-                                            <IconX
-                                                style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
-                                                stroke={1.5}
-                                            />
-                                        </Dropzone.Reject>
 
-                                        <div>
-                                            <Text size="xl" inline>
-                                                Drag files here or click to select files
-                                            </Text>
-                                        </div>
-                                    </Group>
-                                </Dropzone>
+                            <Stack py="lg">
+                                <input
+                                    type="file"
+                                    accept=".xlsx, .xls"
+                                    onChange={handleFileUpload}
+                                />
                                 <Group justify="flex-end" mt="md">
                                     <Button type="submit" onClick={onSubmitNews} color="#2CB5B5">Submit</Button>
-                                    <input
-                                        type="file"
-                                        accept=".xlsx, .xls"
-                                        onChange={handleFileUpload}
-                                    />
-                                    <FileButton onChange={handleFileUpload} accept="text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                        {(props) => <Button {...props}>Upload </Button>}
-                                    </FileButton>
                                 </Group>
-                            </Group>
+                            </Stack>
+
                         </div>
                     }
                 </Modal>
@@ -303,7 +248,6 @@ export default function EpisodeTable(
                 <Column key='episodetitle' field='episodetitle' header='Title' sortable />
                 <Column key='description' field='description' header='Description' sortable />
                 <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
-                <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
         </div>
 

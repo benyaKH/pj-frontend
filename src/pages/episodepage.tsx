@@ -1,8 +1,8 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack,  ActionIcon, Button,  Modal, TagsInput, Badge } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, PillsInput, Pill } from '@mantine/core';
 
-import { IconEdit } from '@tabler/icons-react';
+import { IconEdit, IconCheck, IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 
@@ -18,7 +18,12 @@ export default function EpisodePage(
     const urlEditEpisodes = `http://localhost:3000/episodes/${params.id}`
     const urlDelEpisodes = `http://localhost:3000/episodes/${params.id}`
 
+    const urlGetRQtags = `http://localhost:3000/rqtags/${params.id}`
+
     const [popupstate, setPopupState] = useState('Edit Episode')
+
+    const [RqTags, setRqTags] = useState([])
+    const [NewRq, setNewRq] = useState<string[]>([]);
 
     const [storyid, setStoryid] = useState('')
     const [storyname, setStoryname] = useState('')
@@ -29,7 +34,7 @@ export default function EpisodePage(
     const [characters, setChars] = useState<string[]>([]);
     const [Links, setLink] = useState('')
     const [opened, handlers] = useDisclosure(false);
-    
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,8 +45,23 @@ export default function EpisodePage(
                 .then(response => response.json())
                 .then(result => {
                     setNumber(result.number); setTitle(result.episodetitle); setDes(result.description);
-                    setTags(result.tags); setChars(result.characters); setLink(result.Links); 
+                    setTags(result.tags); setChars(result.characters); setLink(result.Links);
                     setStoryname(result.StoryId.storyname); setStoryid(result.StoryId._id)
+                })
+                .catch(e => console.log(e))
+        }
+        fetchData()
+    }, [])
+
+    useEffect(() => {
+        const fetchData = async () => {
+
+            await fetch(urlGetRQtags, {
+                method: "GET"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    setRqTags(result)
                 })
                 .catch(e => console.log(e))
         }
@@ -76,7 +96,76 @@ export default function EpisodePage(
             .then(response => response.json())
             .then(data => console.log(data));
 
-        window.location.href=`/Dashboard/${storyid}`
+        window.location.href = `/Dashboard/${storyid}`
+    }
+
+    const onSubmitRq = () => {
+        const url = 'http://localhost:3000/rqtags'
+        NewRq.forEach((element) => {
+            console.log(element)
+            const payload = {
+                tag: element,
+                episodeId: params.id
+
+            }
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            };
+            fetch(url, requestOptions)
+                .then(response => response.json())
+                .then(data => console.log(data));
+        })
+
+        setRqTags([])
+    }
+
+    useEffect(() => {
+        // This runs when the component is mounted (after the page loads).
+      
+        if (localStorage.getItem('openSidebarOnLoad') === 'true') {
+            handlers.open();
+            setPopupState('Request Tags')
+      
+          localStorage.removeItem('openSidebarOnLoad');
+        }
+      }, []);
+      
+
+    const onConfirmRq = (Rqid: any, Rqtag: any) => {
+        const Newtags = tags
+        Newtags[tags.length] = Rqtag
+        const payload = {
+            tags: Newtags
+        }
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        };
+        fetch(urlEditEpisodes, requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+
+        onDeleteRq(Rqid)
+
+    }
+    const onDeleteRq = (Rqid: any) => {
+        const urlDelRQtags = `http://localhost:3000/rqtags/${Rqid}`
+        const requestOptions = {
+            method: 'DELETE'
+        };
+        fetch(urlDelRQtags, requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+
+            localStorage.setItem('openSidebarOnLoad', 'true');
+        window.location.reload()
+        
+        
+
     }
 
     const showtags = tags.map((tag) => (
@@ -85,6 +174,20 @@ export default function EpisodePage(
 
     const showchars = characters.map((char) => (
         <Badge color="#48E1E1">{char}</Badge>
+    ));
+
+    const showRqtags = RqTags.map((tag) => (
+        <Group justify="space-between" px={rem(20)} >
+            <Badge color="#48E1E1" >{tag['tag']}</Badge>
+            <Group>
+                <ActionIcon variant="subtle" color='green' onClick={() => { onConfirmRq(tag['_id'], tag['tag']); }} >
+                    <IconCheck style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                </ActionIcon>
+                <ActionIcon variant="subtle" color='red' onClick={() => { onDeleteRq(tag['_id']); }} >
+                    <IconX style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                </ActionIcon>
+            </Group>
+        </Group>
     ));
 
     return (
@@ -98,22 +201,40 @@ export default function EpisodePage(
                     alt="No way!"
                 />
                 <Stack px={rem(100)}>
-                    Episode page
+                    <Group>
+                        <Text>Episode page</Text>
+                        {props.isAdmin ?
+                            <Button variant="light" color="indigo" size="xs" radius="xl"
+                                onClick={() => { handlers.open(); setPopupState('Request Tags'); }}
+                                rightSection={
+                                    RqTags.length != 0 ?
+                                        <Badge size="xs" color="red" circle>
+                                            {RqTags.length}
+                                        </Badge> : <></>
+                                }>
+                                Request Tag
+                            </Button> : <></>}
+                    </Group>
                     <Text size={rem(35)} fw={700}>{storyname}</Text>
                     <Group>
                         <Text size={rem(24)} fw={500}>Episode {number} : {episodetitle}</Text>
                         {props.isAdmin ?
-                        <Group>
-                            <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={()=>{handlers.open(); setPopupState('Edit Episode');}} >
-                                <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
-                            </ActionIcon>
-                            <Button color="#FF6666" onClick={()=>{handlers.open(); setPopupState('Delete Episode');}}>Delete</Button>
-                        </Group>
-                         : <div></div>}
+                            <Group>
+                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => { handlers.open(); setPopupState('Edit Episode'); }} >
+                                    <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                </ActionIcon>
+                                <Button color="#FF6666" onClick={() => { handlers.open(); setPopupState('Delete Episode'); }}>Delete</Button>
+                            </Group>
+                            : <div></div>}
                     </Group>
                     <Text size={rem(14)}>{description}</Text>
                     <Stack>
-                        <Text size={rem(14)}>Tags</Text>
+                        <Group>
+                            <Text size={rem(14)}>Tags</Text>
+                            {props.isAdmin ? <></> :
+                                <Button radius="xl" variant="light" color="pink" size="xs"
+                                    onClick={() => { handlers.open(); setPopupState('Request New Tags') }}>request new tags</Button>}
+                        </Group>
                         <Group>
                             {showtags}
                         </Group>
@@ -124,90 +245,93 @@ export default function EpisodePage(
                             {showchars}
                         </Group>
                     </Stack>
-                    <Button color="#521125" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        window.location.href=Links;
+                    <Button color="#521125"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            window.location.href = Links;
                         }}>Watch Episode</Button>
                 </Stack>
             </Stack>
-            <Modal opened={opened&&(popupstate=='Edit Episode')} onClose={()=>{handlers.close()}} title={popupstate} centered>
-                {popupstate=='Edit Episode' ?
-                <form onSubmit={onSubmit}>
-                    <TextInput
-                        withAsterisk
-                        label="No."
-                        placeholder="your episode no."
-                        value={number}
-                        onChange={e => setNumber(e.target.value)}
-                    />
-                    <TextInput
-                        withAsterisk
-                        label="Title"
-                        placeholder="your episode title"
-                        value={episodetitle}
-                        onChange={e => setTitle(e.target.value)}
-                    />
-                    <TextInput
-                        label="Description"
-                        placeholder="your episode description"
-                        value={description}
-                        onChange={e => setDes(e.target.value)}
-                    />
+            <Modal opened={opened} onClose={() => { handlers.close() }} title={popupstate} centered>
+                {popupstate == 'Edit Episode' ?
+                    <form onSubmit={onSubmit}>
+                        <TextInput
+                            withAsterisk
+                            label="No."
+                            placeholder="your episode no."
+                            value={number}
+                            onChange={e => setNumber(e.target.value)}
+                        />
+                        <TextInput
+                            withAsterisk
+                            label="Title"
+                            placeholder="your episode title"
+                            value={episodetitle}
+                            onChange={e => setTitle(e.target.value)}
+                        />
+                        <TextInput
+                            label="Description"
+                            placeholder="your episode description"
+                            value={description}
+                            onChange={e => setDes(e.target.value)}
+                        />
 
-                    <TagsInput
-                        label="Tag"
-                        placeholder="Enter tag"
-                        clearable
-                        value={tags}
-                        onChange={setTags}
-                    />
-                    <TagsInput
-                        label="Characters"
-                        placeholder="Enter characters name"
-                        clearable
-                        value={characters}
-                        onChange={setChars}
-                    />
-                    <TextInput
-                        withAsterisk
-                        label="Link"
-                        placeholder="your episode link"
-                        value={Links}
-                        onChange={e => setLink(e.target.value)}
-                    />
+                        <TagsInput
+                            label="Tag"
+                            placeholder="Enter tag"
+                            clearable
+                            value={tags}
+                            onChange={setTags}
+                        />
+                        <TagsInput
+                            label="Characters"
+                            placeholder="Enter characters name"
+                            clearable
+                            value={characters}
+                            onChange={setChars}
+                        />
+                        <TextInput
+                            withAsterisk
+                            label="Link"
+                            placeholder="your episode link"
+                            value={Links}
+                            onChange={e => setLink(e.target.value)}
+                        />
 
-                    <Group justify="flex-end" mt="md">
-                        <Button type="submit" onClick={()=>{handlers.close()}} color="#2CB5B5">Submit</Button>
-                        <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
-                    </Group>
-                </form>:popupstate=='Delete Episode' ? 
-                <Stack>
-                    <Text>Are you sure you want to delete this episode</Text>
-                    <Text>Episode {number} : {episodetitle}</Text>
-                    <Text lineClamp={3}>{description}</Text>
-                    <Group justify="flex-end" mt="md">
-                        <Button type="submit" onClick={onDelete} color="#2CB5B5">Submit</Button>
-                        <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
-                    </Group>
-                </Stack> 
-                : <div></div>
+                        <Group justify="flex-end" mt="md">
+                            <Button type="submit" onClick={() => { handlers.close() }} color="#2CB5B5">Submit</Button>
+                            <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
+                        </Group>
+                    </form> : popupstate == 'Delete Episode' ?
+                        <Stack>
+                            <Text>Are you sure you want to delete this episode</Text>
+                            <Text>Episode {number} : {episodetitle}</Text>
+                            <Text lineClamp={3}>{description}</Text>
+                            <Group justify="flex-end" mt="md">
+                                <Button type="submit" onClick={onDelete} color="#2CB5B5">Submit</Button>
+                                <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
+                            </Group>
+                        </Stack>
+                        : popupstate == 'Request Tags' ?
+                            <Stack>
+                                {showRqtags}
+                            </Stack>
+                            : popupstate == 'Request New Tags' ?
+                                <form onSubmit={onSubmitRq}>
+                                    <TagsInput
+                                        placeholder="Enter tag"
+                                        clearable
+                                        value={NewRq}
+                                        onChange={setNewRq}
+                                    />
+                                    <Group justify="flex-end" mt="md">
+                                        <Button type="submit" color="#2CB5B5">Submit</Button>
+                                    </Group>
+                                </form>
+                                : <></>
+
                 }
-                
-            </Modal>
-            <Modal opened={opened&&(popupstate=='Delete Episode')} onClose={()=>{handlers.close()}} title={popupstate} centered>
-                
-                <Stack>
-                    <Text>Are you sure you want to delete this episode</Text>
-                    <Text>Episode {number} : {episodetitle}</Text>
-                    <Text lineClamp={3}>{description}</Text>
-                    <Group justify="flex-end" mt="md">
-                        <Button type="submit" onClick={onDelete} color="#2CB5B5">Submit</Button>
-                        <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
-                    </Group>
-                </Stack> 
-                
-                
+
             </Modal>
         </AppShell.Main>
     );
