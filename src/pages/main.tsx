@@ -4,10 +4,19 @@ import { IconSearch } from '@tabler/icons-react';
 
 
 import {  AppShell,  Group, TextInput, rem,  Card, Image, Text, Stack } from '@mantine/core';
+import { useState } from 'react';
 
 export default function MainPage() {
 
+    const [value, setValue] = useState('');
+
     const Searchicon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
+
+    const handleKeyDown = (event: { key: string; }) => {
+        if (event.key === 'Enter') {
+            window.location.href = `/Search/${value}`
+        }
+      }
 
     return (
         <AppShell.Main>
@@ -24,6 +33,9 @@ export default function MainPage() {
                     rightSectionPointerEvents="none"
                     rightSection={Searchicon}
                     placeholder="Search..."
+                    onKeyDown={handleKeyDown}
+                    onChange={(event) => setValue(event.currentTarget.value)}
+                    
                 />
                 <Group justify="space-between" grow>
                     <Card
