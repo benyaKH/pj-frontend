@@ -1,5 +1,5 @@
 import '@mantine/core/styles.css';
-import { Button, Container, Group, Modal, Text, rem } from '@mantine/core';
+import { Button, Container, Group, Indicator, Modal, Text, rem } from '@mantine/core';
 import StoryCard from './StoryCard';
 import { useDisclosure, useHover } from '@mantine/hooks';
 import { useState } from 'react';
@@ -33,7 +33,7 @@ export default function StoryCardAdmin(
 
     }
     return (
-        
+        <Indicator color="red"  label="!" size={20}>
         <div ref={ref}>
             <StoryCard id={props.stid} category={props.category}title={props.title} description={props.description} Ep={props.Ep.length} isAdmin={true}></StoryCard>
             <Modal opened={opened} onClose={close} title="Are you sure delete this question?" centered>
@@ -50,8 +50,7 @@ export default function StoryCardAdmin(
                 </Button>
             </Container> : <div></div>}
         </div>
-        
-
+        </Indicator>
     );
 
 }

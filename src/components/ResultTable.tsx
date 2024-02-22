@@ -8,10 +8,11 @@ import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 
 
-export default function EpisodeTable(
+export default function ResultTable(
     props: {
         stid: string | undefined;
-        isAdmin: boolean
+        isAdmin: boolean;
+        keyword: string[] | null;
     }) {
 
     const [filters, setFilters] = useState({
@@ -24,8 +25,10 @@ export default function EpisodeTable(
     const [RqEp, setRqEp] = useState([])
 
 
-    const urlGetEpisodes = `http://localhost:3000/episodes/story/${props.stid}`
+    const urlGetEpisodes = `http://localhost:3000/episodes/search?keyword=${props.keyword}`
     const urltagRequest = `http://localhost:3000/rqtags/lenght/${props.stid}`
+    const urlta = `http://localhost:3000/rqtags/lenght/${props.keyword}`
+
 
 
     const onGlobalFilterChange = (e: { target: { value: any; }; }) => {
@@ -119,7 +122,8 @@ export default function EpisodeTable(
     };
 
     return (
-
+        <div>
+            <Text>{urlta}</Text>
             <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
                 dataKey="_id" filters={filters} filterDisplay="row" showGridlines
                 selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
@@ -130,7 +134,7 @@ export default function EpisodeTable(
                 <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
             </DataTable>
         
-
+            </div>
 
     );
 

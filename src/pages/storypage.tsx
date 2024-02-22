@@ -4,12 +4,12 @@ import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIco
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import EpisodeTable from '../components/EpisodeTable';
 
 import ReactQuill from "react-quill";
 
 import "react-quill/dist/quill.snow.css";
-import { useHover } from '@mantine/hooks';
+
+import TableSection from '../components/TableSection';
 
 export default function StoryPage(
     props: {
@@ -171,7 +171,7 @@ export default function StoryPage(
                         {IsEditDEs ? <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button> : <div></div>}
                     </Group>
                     <Divider my="md" />
-                    <EpisodeTable stid={params.id} isAdmin={props.isAdmin}></EpisodeTable>
+                    <TableSection stid={params.id} isAdmin={props.isAdmin}/>
                 </Stack>
             </Stack>
         </AppShell.Main>
