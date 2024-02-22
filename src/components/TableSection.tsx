@@ -2,7 +2,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
 import { IconNewSection, IconSearch } from '@tabler/icons-react';
-import { ActionIcon, Badge, Button, Group, Modal, Stack, TagsInput, Text, TextInput, UnstyledButton, rem } from '@mantine/core';
+import { ActionIcon, Anchor, Badge, Button, Group, Modal, Stack, TagsInput, Text, TextInput, UnstyledButton, rem } from '@mantine/core';
 import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { FilterMatchMode } from 'primereact/api';
@@ -123,9 +123,9 @@ export default function TableSection(
     // const Rqtags =  [...new Set(array.map((item) => item.age))];
 
     const onSearchKeyword = () => {
-        if(key.length != 0){
+        if (key.length != 0) {
             setState('search keyword')
-        }else{
+        } else {
             setState('allEp')
         }
     }
@@ -144,8 +144,12 @@ export default function TableSection(
                     {popupstate == 'New Episode' ?
                         <div>
                             <Group>
-                                <UnstyledButton onClick={() => setNewChoices(true)}>one-by-one</UnstyledButton>
-                                <UnstyledButton onClick={() => setNewChoices(false)}>files</UnstyledButton>
+                                <Anchor onClick={() => setNewChoices(true)} underline="hover" color='black'>
+                                    one-by-one
+                                </Anchor>
+                                <Anchor onClick={() => setNewChoices(false)} underline="hover" color='black'>
+                                files
+                                </Anchor>
                             </Group>
                             {newChoices ?
                                 <form onSubmit={onSubmitNew}>
@@ -227,15 +231,15 @@ export default function TableSection(
                     />
                     <ActionIcon variant="subtle" radius="xl" size="lg" color='black' aria-label="search"
                         onClick={onSubmitkey}>
-                        <IconSearch style={{ width: '70%', height: '70%' }} stroke={2} onClick={onSearchKeyword}/>
+                        <IconSearch style={{ width: '70%', height: '70%' }} stroke={2} onClick={onSearchKeyword} />
                     </ActionIcon>
                 </Group>
             </Group>
             {/* Table */}
             <Text>{state}</Text>
-            {state == 'allEp'?
-            <EpisodeTable stid={props.stid} isAdmin={props.isAdmin}/>:<ResultTable stid={props.stid} isAdmin={props.isAdmin} keyword={key}/>}
-            
+            {state == 'allEp' ?
+                <EpisodeTable stid={props.stid} isAdmin={props.isAdmin} /> : <ResultTable stid={props.stid} isAdmin={props.isAdmin} keyword={key} />}
+
         </div>
 
 
