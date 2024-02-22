@@ -1,15 +1,15 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
-import { IconEdit, IconNewSection, IconTrash, IconUpload, IconX, IconSearch } from '@tabler/icons-react';
-import { ActionIcon, Badge, Button, FileButton, FileInput, Group, Modal, Stack, TagsInput, Text, TextInput, UnstyledButton, rem } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { IconNewSection, IconSearch } from '@tabler/icons-react';
+import { ActionIcon, Badge, Button, Group, Modal, Stack, TagsInput, Text, TextInput, UnstyledButton, rem } from '@mantine/core';
+import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import * as XLSX from "xlsx";
 
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+
 import KeywordSearch from './keywordsearch';
 
 export default function EpisodeTable(
@@ -38,13 +38,20 @@ export default function EpisodeTable(
     const [Links, setLink] = useState('')
     const [StoryId, setStoryId] = useState(props.stid)
 
+    const [RqEp, setRqEp] = useState([])
+
     const [newChoices, setNewChoices] = useState(true)
+
+    const [key, setKey] = useState<string[]>([]);
 
 
 
 
     const urlGetEpisodes = `http://localhost:3000/episodes/story/${props.stid}`
     const urlNewEpisodes = `http://localhost:3000/episodes`
+    const urSearchkey = `http://localhost:3000/episodes/search?keyword=${key}`
+
+    const urltagRequest = `http://localhost:3000/rqtags/lenght/${props.stid}`
 
 
     const onGlobalFilterChange = (e: { target: { value: any; }; }) => {
@@ -63,7 +70,7 @@ export default function EpisodeTable(
             return `/Dashborad/Episode/${id}`
         } else return `/Episode/${id}`
     }
-
+    // get episodes
     useEffect(() => {
         const fetchData = async () => {
 
@@ -79,6 +86,41 @@ export default function EpisodeTable(
 
 
     }, [])
+
+    // get episode requests
+    useEffect(() => {
+        const fetchData = async () => {
+
+            await fetch(urltagRequest, {
+                method: "GET"
+            })
+                .then(response => response.json())
+                .then(result => setRqEp(result))
+                .catch(e => console.log(e))
+        }
+        fetchData()
+
+
+
+    }, [])
+
+
+    const onSubmitkey = () => {
+        useEffect(() => {
+            const fetchData = async () => {
+
+                await fetch(urSearchkey, {
+                    method: "GET"
+                })
+                    .then(response => response.json())
+                    .then(result => setEpisodes(result))
+                    .catch(e => console.log(e))
+            }
+            fetchData()
+        }, [])
+
+        console.log("something")
+    }
 
     const onSubmitNew = () => {
         const payload = {
@@ -117,6 +159,12 @@ export default function EpisodeTable(
 
     const onSubmitNews = () => {
         data.forEach((element) => {
+            if (element.tags != undefined) {
+                element.tags = element.tags.split(',')
+            }
+            if (element.characters != undefined) {
+                element.characters = element.characters.split(',')
+            }
 
             element["StoryId"] = StoryId
             console.log(element)
@@ -130,9 +178,11 @@ export default function EpisodeTable(
                 .then(response => response.json())
                 .then(data => console.log(data));
         })
+
+        location.reload();
     }
 
-
+    // const Rqtags =  [...new Set(array.map((item) => item.age))];
 
 
     const renderHeader = () => {
@@ -157,6 +207,17 @@ export default function EpisodeTable(
     const tagBodyTemplate = (episodes: { tags: any[]; }) => {
         return episodes.tags.map((tag) => (
             <Badge color="#48E1E1">{tag}</Badge>))
+
+    };
+
+    const titleTemplate = (episodes: { episodetitle: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; _id: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => {
+        return <Group>
+            <Text>{episodes.episodetitle}</Text>
+            {RqEp.find((element) => element == episodes._id) != undefined ?
+            <Badge size="xs" color="red" >
+                New Request!
+            </Badge>:<div></div>}
+        </Group>
 
     };
 
@@ -236,26 +297,34 @@ export default function EpisodeTable(
                                 </div>
                             }
                         </div> : popupstate == 'Search Episode' ?
-                        <div>
-                            <KeywordSearch/>
-                        </div>:<div></div>}
+                            <div>
+                                <KeywordSearch />
+                            </div> : <div></div>}
                 </Modal>
 
                 {props.isAdmin ?
                     <ActionIcon variant="subtle" color='black' aria-label="EditDes" onClick={() => { handlers.open(); setPopupState('New Episode'); }}>
                         <IconNewSection style={{ width: '130%', height: '130%' }} stroke={1.5} />
                     </ActionIcon> : <div></div>}
-                <ActionIcon variant="subtle" radius="xl" size="lg" color='black' aria-label="search" 
-                onClick={() => { handlers.open(); setPopupState('Search Episode'); }}>
-                    <IconSearch style={{ width: '70%', height: '70%' }} stroke={2} />
-                </ActionIcon>
+                <Group>
+                    <TagsInput
+                        placeholder="Pick tag from list"
+                        maxDropdownHeight={200}
+                        value={key}
+                        onChange={setKey}
+                    />
+                    <ActionIcon variant="subtle" radius="xl" size="lg" color='black' aria-label="search"
+                        onClick={onSubmitkey}>
+                        <IconSearch style={{ width: '70%', height: '70%' }} stroke={2} />
+                    </ActionIcon>
+                </Group>
             </Group>
             <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
                 dataKey="_id" filters={filters} filterDisplay="row" showGridlines
                 selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
                 globalFilterFields={['number', 'episodetitle', 'description', 'tags']} header={header} emptyMessage="No episodes found.">
                 <Column key='number' field='number' header='No.' sortable />
-                <Column key='episodetitle' field='episodetitle' header='Title' sortable />
+                <Column key='episodetitle' field='episodetitle' body={titleTemplate} header='Title' sortable />
                 <Column key='description' field='description' header='Description' sortable />
                 <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
             </DataTable>

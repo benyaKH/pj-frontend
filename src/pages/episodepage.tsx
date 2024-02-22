@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, PillsInput, Pill } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, PillsInput, Pill, Checkbox } from '@mantine/core';
 
 import { IconEdit, IconCheck, IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -24,6 +24,7 @@ export default function EpisodePage(
 
     const [RqTags, setRqTags] = useState([])
     const [NewRq, setNewRq] = useState<string[]>([]);
+    const [value, setValue] = useState<string[]>([]);
 
     const [storyid, setStoryid] = useState('')
     const [storyname, setStoryname] = useState('')
@@ -105,7 +106,8 @@ export default function EpisodePage(
             console.log(element)
             const payload = {
                 tag: element,
-                episodeId: params.id
+                episodeId: params.id,
+                storyId: storyid
 
             }
 
@@ -124,19 +126,25 @@ export default function EpisodePage(
 
     useEffect(() => {
         // This runs when the component is mounted (after the page loads).
-      
+
         if (localStorage.getItem('openSidebarOnLoad') === 'true') {
             handlers.open();
             setPopupState('Request Tags')
-      
-          localStorage.removeItem('openSidebarOnLoad');
-        }
-      }, []);
-      
 
-    const onConfirmRq = (Rqid: any, Rqtag: any) => {
+            localStorage.removeItem('openSidebarOnLoad');
+        }
+    }, []);
+
+
+    const onConfirmRq = () => {
         const Newtags = tags
-        Newtags[tags.length] = Rqtag
+        value.forEach((element) => {
+            RqTags.forEach((tag)=>{
+                if(element == tag["_id"]){
+                    Newtags[tags.length] = tag['tag']
+                }
+            })
+        })
         const payload = {
             tags: Newtags
         }
@@ -149,22 +157,24 @@ export default function EpisodePage(
             .then(response => response.json())
             .then(data => console.log(data));
 
-        onDeleteRq(Rqid)
+        onDeleteRq()
 
     }
-    const onDeleteRq = (Rqid: any) => {
-        const urlDelRQtags = `http://localhost:3000/rqtags/${Rqid}`
-        const requestOptions = {
-            method: 'DELETE'
-        };
-        fetch(urlDelRQtags, requestOptions)
-            .then(response => response.json())
-            .then(data => console.log(data));
+    const onDeleteRq = () => {
+        value.forEach((element) => {
+            const urlDelRQtags = `http://localhost:3000/rqtags/${element}`
+            const requestOptions = {
+                method: 'DELETE'
+            };
+            fetch(urlDelRQtags, requestOptions)
+                .then(response => response.json())
+                .then(data => console.log(data));
 
-            localStorage.setItem('openSidebarOnLoad', 'true');
+        })
+        localStorage.setItem('openSidebarOnLoad', 'true');
         window.location.reload()
-        
-        
+
+
 
     }
 
@@ -177,17 +187,7 @@ export default function EpisodePage(
     ));
 
     const showRqtags = RqTags.map((tag) => (
-        <Group justify="space-between" px={rem(20)} >
-            <Badge color="#48E1E1" >{tag['tag']}</Badge>
-            <Group>
-                <ActionIcon variant="subtle" color='green' onClick={() => { onConfirmRq(tag['_id'], tag['tag']); }} >
-                    <IconCheck style={{ width: '130%', height: '130%' }} stroke={1.5} />
-                </ActionIcon>
-                <ActionIcon variant="subtle" color='red' onClick={() => { onDeleteRq(tag['_id']); }} >
-                    <IconX style={{ width: '130%', height: '130%' }} stroke={1.5} />
-                </ActionIcon>
-            </Group>
-        </Group>
+        <Checkbox value={tag['_id']} label={tag['tag']} />
     ));
 
     return (
@@ -314,7 +314,15 @@ export default function EpisodePage(
                         </Stack>
                         : popupstate == 'Request Tags' ?
                             <Stack>
-                                {showRqtags}
+                                <Checkbox.Group value={value} onChange={setValue}>
+                                    <Stack mt="xs">
+                                        {showRqtags}
+                                    </Stack>
+                                </Checkbox.Group>
+                                <Group justify="flex-end" mt="md">
+                                    <Button type="submit" onClick={onConfirmRq} color="#2CB5B5">Accept</Button>
+                                    <Button type="reset" onClick={onDeleteRq} variant="outline" color="#FF6666">Decline</Button>
+                                </Group>
                             </Stack>
                             : popupstate == 'Request New Tags' ?
                                 <form onSubmit={onSubmitRq}>

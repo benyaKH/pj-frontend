@@ -33,6 +33,7 @@ export default function StoryCardAdmin(
 
     }
     return (
+        
         <div ref={ref}>
             <StoryCard id={props.stid} category={props.category}title={props.title} description={props.description} Ep={props.Ep.length} isAdmin={true}></StoryCard>
             <Modal opened={opened} onClose={close} title="Are you sure delete this question?" centered>
@@ -49,6 +50,7 @@ export default function StoryCardAdmin(
                 </Button>
             </Container> : <div></div>}
         </div>
+        
 
     );
 

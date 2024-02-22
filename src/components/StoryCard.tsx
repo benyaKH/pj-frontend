@@ -33,6 +33,7 @@ export default function StoryCard(
                     h={160}
                     alt="No way!"
                 />
+                
             </Card.Section>
 
             <Text fw={500} size="md" mt="md" color='white'>

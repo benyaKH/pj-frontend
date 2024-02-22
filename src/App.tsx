@@ -150,7 +150,7 @@ export default function App() {
           <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true} />}></Route>
           <Route path='/Episode/:id' element={<EpisodePage isAdmin={false} />}></Route>
           <Route path='/Search/:id' element={<SearchPage  />}></Route>
-          <Route path='/Episode/Search' element={<EpResultPage  />}></Route>
+          <Route path='/Episode/Search/:id' element={<EpResultPage  />}></Route>
         </Routes>
 
       </AppShell>

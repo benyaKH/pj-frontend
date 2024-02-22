@@ -3,7 +3,7 @@ import '@mantine/core/styles.css';
 import { IconSearch } from '@tabler/icons-react';
 
 
-import {  AppShell,  Group, TextInput, rem,  Card, Image, Text, Stack, Divider, SimpleGrid } from '@mantine/core';
+import {  AppShell,  Group, TextInput, rem,  Card, Image, Text, Stack, Divider, SimpleGrid, Button } from '@mantine/core';
 import StoryCard from '../components/StoryCard';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ export default function EpResultPage() {
 
     const [stories, setStories] = useState([])
 
-    const urlCategory = `http://localhost:3000/stories/search/a`
+    const urlCategory = `http://localhost:3000/episodes/search?keyword=${params.id}`
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,10 +31,9 @@ export default function EpResultPage() {
 
 
     const items = stories.map((item) => (
-        <StoryCard id={item['_id']}title={item['storyname']} 
-        category={item['category']} description={item['description']} 
-        Ep={item['episodeId']['length']} isAdmin={false}></StoryCard>
-
+        
+        <Button>{item['episodetitle']}</Button>
+        
     ));
 
     return (

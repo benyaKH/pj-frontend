@@ -1,19 +1,27 @@
 import '@mantine/core/styles.css';
-import {  TagsInput } from '@mantine/core';
+import {  Button, TagsInput } from '@mantine/core';
 
 import { useState } from 'react';
 
 export default function KeywordSearch() {
 
-    const groceries = ['🍎 Apples', '🍌 Bananas', '🥦 Broccoli', '🥕 Carrots', '🍫 Chocolate','Oreo','fff','deeun'];
+    
+
+    const [value, setValue] = useState<string[]>([]);
+
+    const onSubmit = () => {
+        window.location.href = `/Episode/Search/${value}`
+    }
 
     return (
-        <TagsInput
-            label="Press Enter to submit a tag"
+        
+            <TagsInput
             placeholder="Pick tag from list"
-
             maxDropdownHeight={200}
-            data={groceries}
+            
+            value={value} 
+            onChange={setValue}
         />
+        
     );
 }
