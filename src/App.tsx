@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { IconUserCircle, IconCategory2 } from '@tabler/icons-react';
 
 import { useDisclosure } from '@mantine/hooks';
-import { MantineProvider, AppShell, Burger, Group, rem, UnstyledButton, Menu, Stack } from '@mantine/core';
+import { MantineProvider, AppShell, Burger, Group, rem, UnstyledButton, Menu, Stack, Anchor } from '@mantine/core';
 import MainPage from './pages/main';
 import DashboardPage from './pages/dashboard';
 import StoryPage from './pages/storypage';
@@ -59,9 +59,17 @@ export default function App() {
             <Group>
               <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
               <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-              
-              SEARCH STORY
-              
+
+              <Anchor
+                variant="gradient"
+                gradient={{ from: 'black', to: 'black' }}
+                fw={500}
+                fz="lg"
+                href={`/`}
+              >
+                SEARCH STORY
+              </Anchor>
+
 
             </Group>
             <Group gap="xl" px="md">
@@ -100,20 +108,20 @@ export default function App() {
                       <Menu.Item component="a" href="/Dashboard" color='white'>
                         veiw profile
                       </Menu.Item>
-                      
-                        <GoogleLogout
-                          render={renderProps => (
-                            <Menu.Item
-                              component="a"
-                              color='white'
-                              onClick={renderProps.onClick} >
-                              log out
-                            </Menu.Item>
-                          )}
-                          clientId={clientId}
-                          buttonText='Log out'
-                          onLogoutSuccess={logOut} />
-                      
+
+                      <GoogleLogout
+                        render={renderProps => (
+                          <Menu.Item
+                            component="a"
+                            color='white'
+                            onClick={renderProps.onClick} >
+                            log out
+                          </Menu.Item>
+                        )}
+                        clientId={clientId}
+                        buttonText='Log out'
+                        onLogoutSuccess={logOut} />
+
                     </div>
                     :
                     <div>
@@ -149,8 +157,8 @@ export default function App() {
           <Route path='/Story/:id' element={<StoryPage isAdmin={false} />}></Route>
           <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true} />}></Route>
           <Route path='/Episode/:id' element={<EpisodePage isAdmin={false} />}></Route>
-          <Route path='/Search/:id' element={<SearchPage  />}></Route>
-          <Route path='/Episode/Search/:id' element={<EpResultPage  />}></Route>
+          <Route path='/Search/:id' element={<SearchPage />}></Route>
+          <Route path='/Episode/Search/:id' element={<EpResultPage />}></Route>
         </Routes>
 
       </AppShell>
