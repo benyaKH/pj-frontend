@@ -110,10 +110,11 @@ export default function EpisodeTable(
     const titleTemplate = (episodes: { episodetitle: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; _id: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => {
         return <Group>
             <Text>{episodes.episodetitle}</Text>
-            {RqEp.find((element) => element == episodes._id) != undefined ?
-            <Badge size="xs" color="red" >
-                New Request!
-            </Badge>:<div></div>}
+            {props.isAdmin ?
+                RqEp.find((element) => element == episodes._id) != undefined ?
+                    <Badge size="xs" color="red" >
+                        New Request!
+                    </Badge> : <div></div> : <div></div>}
         </Group>
 
     };

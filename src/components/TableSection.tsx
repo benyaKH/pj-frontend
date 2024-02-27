@@ -1,16 +1,11 @@
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+
 import '@mantine/core/styles.css';
 import { IconNewSection, IconSearch } from '@tabler/icons-react';
-import { ActionIcon, Anchor, Badge, Button, Group, Modal, Stack, TagsInput, Text, TextInput, UnstyledButton, rem } from '@mantine/core';
-import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
+import { ActionIcon, Anchor,  Button, Group, Modal, Stack, TagsInput, Text, TextInput,  rem } from '@mantine/core';
+import {  useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { FilterMatchMode } from 'primereact/api';
-import { InputText } from 'primereact/inputtext';
 import * as XLSX from "xlsx";
 
-
-import KeywordSearch from './keywordsearch';
 import EpisodeTable from './EpisodeTable';
 import ResultTable from './ResultTable';
 
@@ -41,24 +36,6 @@ export default function TableSection(
     const [state, setState] = useState('allEp')
 
     const urlNewEpisodes = `http://localhost:3000/episodes`
-    const urSearchkey = `http://localhost:3000/episodes/search?keyword=${key}`
-
-    const onSubmitkey = () => {
-        useEffect(() => {
-            const fetchData = async () => {
-
-                await fetch(urSearchkey, {
-                    method: "GET"
-                })
-                    .then(response => response.json())
-                    .then(result => setEpisodes(result))
-                    .catch(e => console.log(e))
-            }
-            fetchData()
-        }, [])
-
-        console.log("something")
-    }
 
     const onSubmitNew = () => {
         const payload = {
@@ -148,7 +125,7 @@ export default function TableSection(
                                     one-by-one
                                 </Anchor>
                                 <Anchor onClick={() => setNewChoices(false)} underline="hover" color='black'>
-                                files
+                                    files
                                 </Anchor>
                             </Group>
                             {newChoices ?
@@ -199,6 +176,14 @@ export default function TableSection(
                                 <div>
 
                                     <Stack py="lg">
+                                        {/* <a
+                                            href={ExamplePdf}
+                                            download="Example-PDF-document"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <button>Download .pdf file</button>
+                                        </a> */}
                                         <input
                                             type="file"
                                             accept=".xlsx, .xls"
@@ -211,10 +196,7 @@ export default function TableSection(
 
                                 </div>
                             }
-                        </div> : popupstate == 'Search Episode' ?
-                            <div>
-                                <KeywordSearch />
-                            </div> : <div></div>}
+                        </div> : <div></div>}
                 </Modal>
                 {/* add new episode */}
                 {props.isAdmin ?
@@ -230,13 +212,13 @@ export default function TableSection(
                         onChange={setKey}
                     />
                     <ActionIcon variant="subtle" radius="xl" size="lg" color='black' aria-label="search"
-                        onClick={onSubmitkey}>
-                        <IconSearch style={{ width: '70%', height: '70%' }} stroke={2} onClick={onSearchKeyword} />
+                        onClick={onSearchKeyword}>
+                        <IconSearch style={{ width: '70%', height: '70%' }} stroke={2}  />
                     </ActionIcon>
                 </Group>
             </Group>
             {/* Table */}
-            <Text>{state}</Text>
+            {/* <Text>{state}</Text> */}
             {state == 'allEp' ?
                 <EpisodeTable stid={props.stid} isAdmin={props.isAdmin} /> : <ResultTable stid={props.stid} isAdmin={props.isAdmin} keyword={key} />}
 

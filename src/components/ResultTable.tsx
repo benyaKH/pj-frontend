@@ -1,7 +1,7 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
-import {  Badge, Group,  Text } from '@mantine/core';
+import { Badge, Group, Text } from '@mantine/core';
 import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 
 import { FilterMatchMode } from 'primereact/api';
@@ -25,7 +25,7 @@ export default function ResultTable(
     const [RqEp, setRqEp] = useState([])
 
 
-    const urlGetEpisodes = `http://localhost:3000/episodes/search?keyword=${props.keyword}`
+    const urlGetEpisodes = `http://localhost:3000/episodes/search/${props.stid}?keyword=${props.keyword}`
     const urltagRequest = `http://localhost:3000/rqtags/lenght/${props.stid}`
     const urlta = `http://localhost:3000/rqtags/lenght/${props.keyword}`
 
@@ -82,7 +82,7 @@ export default function ResultTable(
     }, [])
 
 
-   
+
 
 
     const renderHeader = () => {
@@ -113,10 +113,12 @@ export default function ResultTable(
     const titleTemplate = (episodes: { episodetitle: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; _id: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => {
         return <Group>
             <Text>{episodes.episodetitle}</Text>
-            {RqEp.find((element) => element == episodes._id) != undefined ?
-            <Badge size="xs" color="red" >
-                New Request!
-            </Badge>:<div></div>}
+            {props.isAdmin ?
+                RqEp.find((element) => element == episodes._id) != undefined ?
+                    <Badge size="xs" color="red" >
+                        New Request!
+                    </Badge> : <div></div> : <div></div>}
+
         </Group>
 
     };
@@ -133,8 +135,8 @@ export default function ResultTable(
                 <Column key='description' field='description' header='Description' sortable />
                 <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
             </DataTable>
-        
-            </div>
+
+        </div>
 
     );
 
