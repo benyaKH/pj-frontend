@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge, Overlay, AspectRatio, Container, Grid } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge, Overlay, AspectRatio, Container, Grid, TypographyStylesProvider } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -191,10 +191,9 @@ export default function StoryPage(
                                 value={description}
                                 onChange={handleProcedureContentChange}
                             /> :
-                            
-                                <div dangerouslySetInnerHTML={{ __html: description }} 
-                                style={{width: '66%'}}/>
-                            
+
+                            <div dangerouslySetInnerHTML={{ __html: description }} />
+
 
 
                         }</Grid.Col>
@@ -208,8 +207,6 @@ export default function StoryPage(
                                 </ActionIcon> : <div></div>}
                         </Grid.Col>
                     </Grid>
-                    <Group>
-                    </Group>
                     <Divider my="md" />
                     <TableSection stid={params.id} isAdmin={props.isAdmin} />
                 </Stack>

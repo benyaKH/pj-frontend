@@ -12,13 +12,13 @@ export default function DashboardPage() {
     const [name, setName] = useState(() => {
         return localStorage.getItem('username')
     })
-    const [ep, setEp] = useState([])
     const [storyname, setStoryname] = useState('')
     const [category, setCategory] = useState('Anime')
+    const [RqEp, setRqEp] = useState([])
 
     const urlUserStory = `http://localhost:3000/stories/owner/${name}`
     const urlNewStory = "http://localhost:3000/stories"
-    const epL = ep?.length || 0;
+    const urltagRequest = `http://localhost:3000/rqtags/board`
 
 
 
@@ -30,6 +30,19 @@ export default function DashboardPage() {
             })
                 .then(response => response.json())
                 .then(result => setStories(result))
+                .catch(e => console.log(e))
+        }
+        fetchData()
+    }, [])
+
+    useEffect(() => {
+        const fetchData = async () => {
+
+            await fetch(urltagRequest, {
+                method: "GET"
+            })
+                .then(response => response.json())
+                .then(result => setRqEp(result))
                 .catch(e => console.log(e))
         }
         fetchData()
@@ -55,7 +68,10 @@ export default function DashboardPage() {
 
     const items = stories.map((item) => (
         
-        <StoryCardAdmin stid={item['_id']}title={item['storyname']} category={item['category']} description={item['description']} Ep={item['episodeId']}></StoryCardAdmin>
+        <StoryCardAdmin stid={item['_id']}title={item['storyname']} 
+        category={item['category']} description={item['description']} 
+        Ep={item['episodeId']} image={item['image']} 
+        rq={RqEp.find((element) => element == item['_id']) != undefined }></StoryCardAdmin>
 
     ));
 

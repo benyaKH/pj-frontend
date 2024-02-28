@@ -73,9 +73,6 @@ export default function EpisodeTable(
                 .catch(e => console.log(e))
         }
         fetchData()
-
-
-
     }, [])
 
 

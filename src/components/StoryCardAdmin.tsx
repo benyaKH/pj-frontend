@@ -1,8 +1,8 @@
 import '@mantine/core/styles.css';
-import { Button, Container, Group, Indicator, Modal, Text, rem } from '@mantine/core';
+import { Button, Container, Group, Indicator, Modal, Text} from '@mantine/core';
 import StoryCard from './StoryCard';
 import { useDisclosure, useHover } from '@mantine/hooks';
-import { useState } from 'react';
+
 
 export default function StoryCardAdmin(
     props: {
@@ -11,6 +11,8 @@ export default function StoryCardAdmin(
         category: string;
         description: string
         Ep: string[]
+        image: string
+        rq: boolean
     }) {
 
     
@@ -33,9 +35,9 @@ export default function StoryCardAdmin(
 
     }
     return (
-        <Indicator color="red"  label="!" size={20}>
+        <Indicator color="red"  label="!" size={20} disabled={!props.rq}>
         <div ref={ref}>
-            <StoryCard id={props.stid} category={props.category}title={props.title} description={props.description} Ep={props.Ep.length} isAdmin={true}></StoryCard>
+            <StoryCard id={props.stid} category={props.category}title={props.title} description={props.description} Ep={props.Ep.length} image={props.image} isAdmin={true}></StoryCard>
             <Modal opened={opened} onClose={close} title="Are you sure delete this question?" centered>
                 <Text size='xs'>If you delete the question you can’t recover it.</Text>
                 <Group justify="flex-end" mt="md">
