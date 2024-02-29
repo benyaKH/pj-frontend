@@ -174,11 +174,11 @@ export default function StoryPage(
                                     <Text size={rem(40)} fw={700}>
                                         {storyname}
                                     </Text>}
-                                {props.isAdmin ?
+                                {props.isAdmin ? IsEditName ?
+                                <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button> :
                                     <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => setIsEditName(true)}>
                                         <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
                                     </ActionIcon> : <div></div>}
-                                {IsEditName ? <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button> : <div></div>}
                             </Group>
 
                             {props.isAdmin ?
