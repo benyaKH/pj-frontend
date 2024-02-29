@@ -14,7 +14,7 @@ import CategoryPage from './pages/category';
 import EpisodePage from './pages/episodepage';
 import SearchPage from './pages/resultpage';
 import EpResultPage from './pages/epResultpage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoginPage from './pages/loginpage';
 import { GoogleLogout } from 'react-google-login';
 
@@ -34,6 +34,7 @@ export default function App() {
     localStorage.removeItem("username");
     window.location.href = "/";
   }
+
 
   const clientId = "708607628638-b2883fsl4fnpomcqh7uadlr0ae36l8n6.apps.googleusercontent.com"
 
