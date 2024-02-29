@@ -169,6 +169,7 @@ export default function StoryPage(
                                         variant="unstyled"
                                         onChange={e => setStoryname(e.target.value)}
                                         value={storyname}
+                                        size="xl"
 
                                     /> :
                                     <Text size={rem(40)} fw={700}>
