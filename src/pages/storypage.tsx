@@ -11,7 +11,7 @@ import "react-quill/dist/quill.snow.css";
 
 import TableSection from '../components/TableSection';
 import { error } from 'jquery';
-import { useDisclosure, useHover } from '@mantine/hooks';
+import { useDisclosure} from '@mantine/hooks';
 
 export default function StoryPage(
     props: {
@@ -21,7 +21,6 @@ export default function StoryPage(
 
     const params = useParams()
     const [IsPublic, setIsPublic] = useState(false)
-    const { hovered, ref } = useHover();
     const [opened, handlers] = useDisclosure(false);
 
     const urlStory = `http://localhost:3000/stories/${params.id}`
@@ -115,7 +114,8 @@ export default function StoryPage(
         };
         fetch(urleditStory, requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data)).then(()=>handlers.close());
+            .then(data => console.log(data));
+        location.reload();
     }
 
     const onPublic = () => {
@@ -140,7 +140,7 @@ export default function StoryPage(
                 bg="var(--mantine-color-body)"
             >
                 <div>
-                    <Container fluid px={0} ref={ref}>
+                    <Container fluid px={0} >
                         <AspectRatio mah={300} ratio={16 / 9}>
                             <BackgroundImage
                                 src={image == "" || image == null ?
@@ -149,11 +149,12 @@ export default function StoryPage(
                                 radius="xs" h={300}
                             >
                             </BackgroundImage>
-                            {hovered && <Center p="md" >
-                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => handlers.open()}>
-                                    <IconEdit style={{ width: '100%', height: '100%' }} stroke={1.5} />
-                                </ActionIcon>
-                            </Center>}
+                            {props.isAdmin && 
+                                <Center p="md" >
+                                    <ActionIcon variant="filled" size="xl" color='black' aria-label="EditName0" onClick={() => handlers.open()}>
+                                        <IconEdit style={{ width: '100%', height: '100%' }} stroke={1.5} />
+                                    </ActionIcon>
+                                </Center>}
                         </AspectRatio>
                     </Container>
                 </div>
