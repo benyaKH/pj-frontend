@@ -1,11 +1,7 @@
 import '@mantine/core/styles.css';
 import { useState, useEffect } from 'react';
-import { IconCirclePlus } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
-
-import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Text, Stack, rem, Divider, Modal, Center, UnstyledButton, SimpleGrid, TextInput, Group, Button, NativeSelect } from '@mantine/core';
-import StoryCardAdmin from '../components/StoryCardAdmin';
+import { AppShell, Text, Stack, rem, Divider,  SimpleGrid} from '@mantine/core';
 import StoryCard from '../components/StoryCard';
 
 export default function CategoryPage() {
@@ -33,7 +29,7 @@ export default function CategoryPage() {
     const items = stories.map((item) => (
         <StoryCard id={item['_id']}title={item['storyname']} 
         category={item['category']} description={item['description']} 
-        Ep={item['episodeId']['length']} isAdmin={false}></StoryCard>
+        Ep={item['episodeId']['length']} image={item['image']} isAdmin={false}></StoryCard>
 
     ));
 
