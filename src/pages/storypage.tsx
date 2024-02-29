@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge, Overlay, AspectRatio, Container, Grid, TypographyStylesProvider } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge, Overlay, AspectRatio, Container, Grid, TypographyStylesProvider, BackgroundImage, Center, Box, Modal } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import "react-quill/dist/quill.snow.css";
 
 import TableSection from '../components/TableSection';
 import { error } from 'jquery';
+import { useDisclosure, useHover } from '@mantine/hooks';
 
 export default function StoryPage(
     props: {
@@ -20,6 +21,8 @@ export default function StoryPage(
 
     const params = useParams()
     const [IsPublic, setIsPublic] = useState(false)
+    const { hovered, ref } = useHover();
+    const [opened, handlers] = useDisclosure(false);
 
     const urlStory = `http://localhost:3000/stories/${params.id}`
     const urleditStory = `http://localhost:3000/stories/${params.id}`
@@ -74,7 +77,7 @@ export default function StoryPage(
         fetchData()
     }, [])
 
-    function convertToBase64(e: { target: { files: Blob[]; }; }) {
+    function convertToBase64(e: any) {
         var reader = new FileReader();
         reader.readAsDataURL(e.target.files[0]);
         reader.onload = () => {
@@ -112,7 +115,7 @@ export default function StoryPage(
         };
         fetch(urleditStory, requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
+            .then(data => console.log(data)).then(()=>handlers.close());
     }
 
     const onPublic = () => {
@@ -136,25 +139,29 @@ export default function StoryPage(
             <Stack
                 bg="var(--mantine-color-body)"
             >
-                <Image
-                    src={image == "" || image == null ?
-                        "https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                        : image}
-                    mah={300}
-                    alt="No way!!"
-                />
+                <div>
+                    <Container fluid px={0} ref={ref}>
+                        <AspectRatio mah={300} ratio={16 / 9}>
+                            <BackgroundImage
+                                src={image == "" || image == null ?
+                                    "https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+                                    : image}
+                                radius="xs" h={300}
+                            >
+                            </BackgroundImage>
+                            {hovered && <Center p="md" >
+                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => handlers.open()}>
+                                    <IconEdit style={{ width: '100%', height: '100%' }} stroke={1.5} />
+                                </ActionIcon>
+                            </Center>}
+                        </AspectRatio>
+                    </Container>
+                </div>
+
 
                 <Stack px={rem(100)}>
                     <Stack gap={rem(1)}>
                         <Group justify="space-between">
-                            <Group>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={convertToBase64}
-                                />
-                                <Button onClick={onUploadImage}>Upload</Button>
-                            </Group>
                             <Group>
                                 {IsEditName ?
                                     <TextInput
@@ -210,6 +217,18 @@ export default function StoryPage(
                     <Divider my="md" />
                     <TableSection stid={params.id} isAdmin={props.isAdmin} />
                 </Stack>
+                <Modal opened={opened} onClose={() => handlers.close()} title="Edit image" centered>
+                    <Stack>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={convertToBase64}
+                        />
+                        <Group justify="flex-end" mt="md">
+                            <Button onClick={onUploadImage}>Upload</Button>
+                        </Group>
+                    </Stack>
+                </Modal>
             </Stack>
         </AppShell.Main>
     );
