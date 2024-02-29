@@ -74,27 +74,33 @@ export default function TableSection(
 
     const onSubmitNews = () => {
         data.forEach((element) => {
-            if (element['tags'] != undefined) {
-                element.tags = element.tags.split(',')
+            if (element['Tags'] != undefined) {
+                element['Tags'] = element['Tags'].split(',')
             }
-            if (element['characters'] != undefined) {
-                element.characters = element.characters.split(',')
+            if (element['Characters/Guest'] != undefined) {
+                element['Characters/Guest'] = element['Characters/Guest'].split(',')
             }
 
-            element["StoryId"] = StoryId
+            const payload = {
+                number:element['Episode number'],
+                episodetitle:element['Episode title'],
+                description:element['Description'],
+                tags:element['Tags'],
+                characters:element['Characters/Guest'],
+                Links:element['Links'],
+                StoryId
+            }
             console.log(element)
-
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(element)
+                body: JSON.stringify(payload)
             };
             fetch(urlNewEpisodes, requestOptions)
                 .then(response => response.json())
                 .then(data => console.log(data));
         })
 
-        location.reload();
     }
 
     // const Rqtags =  [...new Set(array.map((item) => item.age))];
