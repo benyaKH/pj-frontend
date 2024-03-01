@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, Divider, ActionIcon, Button, Switch, Badge, Overlay, AspectRatio, Container, Grid, TypographyStylesProvider, BackgroundImage, Center, Box, Modal } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Text, Stack, Divider, ActionIcon, Button, Switch, AspectRatio, Container, Grid, BackgroundImage, Center,  Modal } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 import TableSection from '../components/TableSection';
-import { error } from 'jquery';
 import { useDisclosure} from '@mantine/hooks';
 
 export default function StoryPage(

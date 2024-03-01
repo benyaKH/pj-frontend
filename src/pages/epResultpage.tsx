@@ -1,10 +1,7 @@
 import '@mantine/core/styles.css';
 
-import { IconSearch } from '@tabler/icons-react';
+import {  AppShell,   rem,   Text, Stack, Divider, SimpleGrid, Button } from '@mantine/core';
 
-
-import {  AppShell,  Group, TextInput, rem,  Card, Image, Text, Stack, Divider, SimpleGrid, Button } from '@mantine/core';
-import StoryCard from '../components/StoryCard';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
