@@ -101,7 +101,7 @@ export default function EpisodePage(
     }
 
     const onSubmitRq = () => {
-        const url = '${mainurl}/rqtags'
+        const url = `${mainurl}/rqtags`
         NewRq.forEach((element) => {
             console.log(element)
             const payload = {
