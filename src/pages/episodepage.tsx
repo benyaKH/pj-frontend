@@ -13,12 +13,13 @@ export default function EpisodePage(
 ) {
 
     const params = useParams()
+    const mainurl= 'https://pj-backend.up.railway.app'
 
-    const urlGetEpisodes = `http://localhost:3000/episodes/${params.id}`
-    const urlEditEpisodes = `http://localhost:3000/episodes/${params.id}`
-    const urlDelEpisodes = `http://localhost:3000/episodes/${params.id}`
+    const urlGetEpisodes = `${mainurl}/episodes/${params.id}`
+    const urlEditEpisodes = `${mainurl}/episodes/${params.id}`
+    const urlDelEpisodes = `${mainurl}/episodes/${params.id}`
 
-    const urlGetRQtags = `http://localhost:3000/rqtags/${params.id}`
+    const urlGetRQtags = `${mainurl}/rqtags/${params.id}`
 
     const [popupstate, setPopupState] = useState('Edit Episode')
 
@@ -101,7 +102,7 @@ export default function EpisodePage(
     }
 
     const onSubmitRq = () => {
-        const url = 'http://localhost:3000/rqtags'
+        const url = '${mainurl}/rqtags'
         NewRq.forEach((element) => {
             console.log(element)
             const payload = {
@@ -110,7 +111,6 @@ export default function EpisodePage(
                 storyId: storyid
 
             }
-
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -118,7 +118,8 @@ export default function EpisodePage(
             };
             fetch(url, requestOptions)
                 .then(response => response.json())
-                .then(data => console.log(data));
+                .then(data => console.log(data))
+                .catch(e => console.log(e))
         })
 
         setRqTags([])
@@ -162,7 +163,7 @@ export default function EpisodePage(
     }
     const onDeleteRq = () => {
         value.forEach((element) => {
-            const urlDelRQtags = `http://localhost:3000/rqtags/${element}`
+            const urlDelRQtags = `${mainurl}/rqtags/${element}`
             const requestOptions = {
                 method: 'DELETE'
             };

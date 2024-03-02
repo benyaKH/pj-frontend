@@ -18,7 +18,7 @@ export default function StoryCardAdmin(
     
     const [opened, { open, close }] = useDisclosure(false);
     const { hovered, ref } = useHover();
-    const urldeleteStory = `http://localhost:3000/stories/${props.stid}`
+    const urldeleteStory = `https://pj-backend.up.railway.app/stories/${props.stid}`
 
     const onSubmitDelete = () => {
 
@@ -28,10 +28,8 @@ export default function StoryCardAdmin(
         };
         fetch(urldelete, requestOptions)
             .then(response => response.json())
-            .then(() => {
-                window.location.reload();
-            })
-            window.location.reload();
+            .then(data => console.log(data))
+            .catch(e => console.log(e))
 
     }
     return (

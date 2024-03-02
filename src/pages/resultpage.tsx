@@ -13,7 +13,9 @@ export default function ResultPage() {
 
     const [stories, setStories] = useState([])
 
-    const urlCategory = `http://localhost:3000/stories/search/${params.id}`
+    const mainurl= 'https://pj-backend.up.railway.app'
+
+    const urlCategory = `${mainurl}/stories/search/${params.id}`
 
     useEffect(() => {
         const fetchData = async () => {

@@ -23,9 +23,11 @@ export default function EpisodeTable(
     const [episodes, setEpisodes] = useState([])
     const [RqEp, setRqEp] = useState([])
 
+    
 
-    const urlGetEpisodes = `http://localhost:3000/episodes/story/${props.stid}`
-    const urltagRequest = `http://localhost:3000/rqtags/lenght/${props.stid}`
+
+    const urlGetEpisodes = `https://pj-backend.up.railway.app/episodes/story/${props.stid}`
+    const urltagRequest = `https://pj-backend.up.railway.app/rqtags/lenght/${props.stid}`
 
 
     const onGlobalFilterChange = (e: { target: { value: any; }; }) => {

@@ -25,9 +25,9 @@ export default function ResultTable(
     const [RqEp, setRqEp] = useState([])
 
 
-    const urlGetEpisodes = `http://localhost:3000/episodes/search/${props.stid}?keyword=${props.keyword}`
-    const urltagRequest = `http://localhost:3000/rqtags/lenght/${props.stid}`
-    const urlta = `http://localhost:3000/rqtags/lenght/${props.keyword}`
+    const urlGetEpisodes = `https://pj-backend.up.railway.app/episodes/search/${props.stid}?keyword=${props.keyword}`
+    const urltagRequest = `https://pj-backend.up.railway.app/rqtags/lenght/${props.stid}`
+    const urlta = `https://pj-backend.up.railway.app/rqtags/lenght/${props.keyword}`
 
 
 

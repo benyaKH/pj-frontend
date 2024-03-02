@@ -35,7 +35,9 @@ export default function TableSection(
 
     const [state, setState] = useState('allEp')
 
-    const urlNewEpisodes = `http://localhost:3000/episodes`
+    const mainurl= 'https://pj-backend.up.railway.app/'
+
+    const urlNewEpisodes = `https://pj-backend.up.railway.app/episodes`
 
     const onSubmitNew = () => {
         const payload = {

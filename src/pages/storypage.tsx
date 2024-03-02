@@ -22,9 +22,11 @@ export default function StoryPage(
     const [IsPublic, setIsPublic] = useState(false)
     const [opened, handlers] = useDisclosure(false);
 
-    const urlStory = `http://localhost:3000/stories/${params.id}`
-    const urleditStory = `http://localhost:3000/stories/${params.id}`
-    const urldeleteStory = `http://localhost:3000/stories/${params.id}`
+    const mainurl= 'https://pj-backend.up.railway.app'
+
+    const urlStory = `${mainurl}/stories/${params.id}`
+    const urleditStory = `${mainurl}/stories/${params.id}`
+    const urldeleteStory = `${mainurl}/stories/${params.id}`
 
     const [storyname, setStoryname] = useState('')
     const [description, setDescription] = useState('')
