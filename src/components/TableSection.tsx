@@ -22,7 +22,6 @@ export default function TableSection(
 
     const [data, setData] = useState([]);
 
-    const [episodes, setEpisodes] = useState([])
     const [number, setNumber] = useState('')
     const [episodetitle, setTitle] = useState('')
     const [description, setDes] = useState('')

@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, PillsInput, Pill, Checkbox } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, PillsInput, Pill, Checkbox, LoadingOverlay } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -13,14 +13,14 @@ export default function EpisodePage(
 ) {
 
     const params = useParams()
-    const mainurl= 'https://pj-backend.up.railway.app'
+    const mainurl = 'https://pj-backend.up.railway.app'
 
     const urlGetEpisodes = `${mainurl}/episodes/${params.id}`
     const urlEditEpisodes = `${mainurl}/episodes/${params.id}`
     const urlDelEpisodes = `${mainurl}/episodes/${params.id}`
-
     const urlGetRQtags = `${mainurl}/rqtags/${params.id}`
 
+    const [loading, setLoading] = useState(false)
     const [popupstate, setPopupState] = useState('Edit Episode')
 
     const [RqTags, setRqTags] = useState([])
@@ -91,14 +91,13 @@ export default function EpisodePage(
     }
 
     const onDelete = () => {
+        setLoading(true)
         const requestOptions = {
             method: 'DELETE'
         };
         fetch(urlDelEpisodes, requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
-
-        window.location.href = `/Dashboard/${storyid}`
+            .then(data => { console.log(data); setLoading(false);}); 
     }
 
     const onSubmitRq = () => {
@@ -140,8 +139,8 @@ export default function EpisodePage(
     const onConfirmRq = () => {
         const Newtags = tags
         value.forEach((element) => {
-            RqTags.forEach((tag)=>{
-                if(element == tag["_id"]){
+            RqTags.forEach((tag) => {
+                if (element == tag["_id"]) {
                     Newtags[tags.length] = tag['tag']
                 }
             })
@@ -254,6 +253,7 @@ export default function EpisodePage(
                 </Stack>
             </Stack>
             <Modal opened={opened} onClose={() => { handlers.close() }} title={popupstate} centered>
+                <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                 {popupstate == 'Edit Episode' ?
                     <form onSubmit={onSubmit}>
                         <TextInput

@@ -13,7 +13,6 @@ import StoryPage from './pages/storypage';
 import CategoryPage from './pages/category';
 import EpisodePage from './pages/episodepage';
 import SearchPage from './pages/resultpage';
-import EpResultPage from './pages/epResultpage';
 import { useEffect, useState } from 'react';
 import LoginPage from './pages/loginpage';
 import { GoogleLogout } from 'react-google-login';
@@ -159,7 +158,6 @@ export default function App() {
           <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true} />}></Route>
           <Route path='/Episode/:id' element={<EpisodePage isAdmin={false} />}></Route>
           <Route path='/Search/:id' element={<SearchPage />}></Route>
-          <Route path='/Episode/Search/:id' element={<EpResultPage />}></Route>
         </Routes>
 
       </AppShell>
