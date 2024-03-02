@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Text, Stack, Divider, ActionIcon, Button, Switch, AspectRatio, Container, Grid, BackgroundImage, Center,  Modal } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Text, Stack, Divider, ActionIcon, Button, Switch, AspectRatio, Container, Grid, BackgroundImage, Center, Modal, Loader } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 import TableSection from '../components/TableSection';
-import { useDisclosure} from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 
 export default function StoryPage(
     props: {
@@ -19,10 +19,11 @@ export default function StoryPage(
 ) {
 
     const params = useParams()
+    const [loading, setLoading] = useState(false)
     const [IsPublic, setIsPublic] = useState(false)
     const [opened, handlers] = useDisclosure(false);
 
-    const mainurl= 'https://pj-backend.up.railway.app'
+    const mainurl = 'https://pj-backend.up.railway.app'
 
     const urlStory = `${mainurl}/stories/${params.id}`
     const urleditStory = `${mainurl}/stories/${params.id}`
@@ -62,6 +63,7 @@ export default function StoryPage(
     ];
 
     useEffect(() => {
+        setLoading(true)
         const fetchData = async () => {
 
             await fetch(urlStory, {
@@ -70,7 +72,8 @@ export default function StoryPage(
                 .then(response => response.json())
                 .then(result => {
                     setStoryname(result.storyname); setDescription(result.description);
-                    setCategory(result.category); setIsPublic(result.IsPublic); setImage(result.image)
+                    setCategory(result.category); setIsPublic(result.IsPublic); setImage(result.image);
+                    setLoading(false)
                 })
                 .catch(e => console.log(e))
         }
@@ -105,6 +108,7 @@ export default function StoryPage(
     }
 
     const onUploadImage = () => {
+        setLoading(true)
         const payload = {
             image
         }
@@ -115,8 +119,7 @@ export default function StoryPage(
         };
         fetch(urleditStory, requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
-        location.reload();
+            .then(data => { console.log(data); setLoading(false); location.reload();});
     }
 
     const onPublic = () => {
@@ -137,102 +140,103 @@ export default function StoryPage(
 
     return (
         <AppShell.Main>
-            <Stack
-                bg="var(--mantine-color-body)"
-            >
-                <div>
-                    <Container fluid px={0} >
-                        <AspectRatio mah={300} ratio={16 / 9}>
-                            <BackgroundImage
-                                src={image == "" || image == null ?
-                                    "https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                                    : image}
-                                radius="xs" h={300}
-                            >
-                            </BackgroundImage>
-                            {props.isAdmin && 
-                                <Center p="md" >
-                                    <ActionIcon variant="filled" size="xl" color='black' aria-label="EditName0" onClick={() => handlers.open()}>
-                                        <IconEdit style={{ width: '100%', height: '100%' }} stroke={1.5} />
-                                    </ActionIcon>
-                                </Center>}
-                        </AspectRatio>
-                    </Container>
-                </div>
+            {loading ? <Loader color="blue" size="xl" /> :
+                <Stack
+                    bg="var(--mantine-color-body)"
+                >
+                    <div>
+                        <Container fluid px={0} >
+                            <AspectRatio mah={300} ratio={16 / 9}>
+                                <BackgroundImage
+                                    src={image == "" || image == null ?
+                                        "https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+                                        : image}
+                                    radius="xs" h={300}
+                                >
+                                </BackgroundImage>
+                                {props.isAdmin &&
+                                    <Center p="md" >
+                                        <ActionIcon variant="filled" size="xl" color='black' aria-label="EditName0" onClick={() => handlers.open()}>
+                                            <IconEdit style={{ width: '100%', height: '100%' }} stroke={1.5} />
+                                        </ActionIcon>
+                                    </Center>}
+                            </AspectRatio>
+                        </Container>
+                    </div>
 
 
-                <Stack px={rem(100)}>
-                    <Stack gap={rem(1)}>
-                        <Group justify="space-between">
-                            <Group>
-                                {IsEditName ?
-                                    <TextInput
-                                        variant="unstyled"
-                                        onChange={e => setStoryname(e.target.value)}
-                                        value={storyname}
-                                        size="xl"
+                    <Stack px={rem(100)}>
+                        <Stack gap={rem(1)}>
+                            <Group justify="space-between">
+                                <Group>
+                                    {IsEditName ?
+                                        <TextInput
+                                            variant="unstyled"
+                                            onChange={e => setStoryname(e.target.value)}
+                                            value={storyname}
+                                            size="xl"
 
-                                    /> :
-                                    <Text size={rem(40)} fw={700}>
-                                        {storyname}
-                                    </Text>}
-                                {props.isAdmin ? IsEditName ?
-                                <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button> :
-                                    <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => setIsEditName(true)}>
-                                        <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
-                                    </ActionIcon> : <div></div>}
+                                        /> :
+                                        <Text size={rem(40)} fw={700}>
+                                            {storyname}
+                                        </Text>}
+                                    {props.isAdmin ? IsEditName ?
+                                        <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button> :
+                                        <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => setIsEditName(true)}>
+                                            <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                        </ActionIcon> : <div></div>}
+                                </Group>
+
+                                {props.isAdmin ?
+                                    <Switch checked={IsPublic} onChange={onPublic} label={"Public"} mt="md" /> : <div></div>}
                             </Group>
 
-                            {props.isAdmin ?
-                                <Switch checked={IsPublic} onChange={onPublic} label={"Public"} mt="md" /> : <div></div>}
-                        </Group>
+                            <Text td="underline" color='gray'>
+                                {category}
+                            </Text>
+                        </Stack>
 
-                        <Text td="underline" color='gray'>
-                            {category}
-                        </Text>
+                        <Grid columns={9}>
+                            <Grid.Col span={8}> {IsEditDEs ?
+                                <ReactQuill
+                                    theme="snow"
+                                    modules={modules}
+                                    formats={formats}
+                                    value={description}
+                                    onChange={handleProcedureContentChange}
+                                /> :
+
+                                <div dangerouslySetInnerHTML={{ __html: description }} />
+
+
+
+                            }</Grid.Col>
+                            <Grid.Col span={1}>
+                                {props.isAdmin ? IsEditDEs ?
+
+                                    <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button>
+                                    :
+                                    <ActionIcon variant="subtle" color='black' aria-label="EditDes" onClick={() => setIsEditDes(true)}>
+                                        <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                    </ActionIcon> : <div></div>}
+                            </Grid.Col>
+                        </Grid>
+                        <Divider my="md" />
+                        <TableSection stid={params.id} isAdmin={props.isAdmin} />
                     </Stack>
-
-                    <Grid columns={9}>
-                        <Grid.Col span={8}> {IsEditDEs ?
-                            <ReactQuill
-                                theme="snow"
-                                modules={modules}
-                                formats={formats}
-                                value={description}
-                                onChange={handleProcedureContentChange}
-                            /> :
-
-                            <div dangerouslySetInnerHTML={{ __html: description }} />
-
-
-
-                        }</Grid.Col>
-                        <Grid.Col span={1}>
-                            {props.isAdmin ? IsEditDEs ?
-
-                                <Button type="submit" onClick={onSubmitEdit} color="#2CB5B5">Submit</Button>
-                                :
-                                <ActionIcon variant="subtle" color='black' aria-label="EditDes" onClick={() => setIsEditDes(true)}>
-                                    <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
-                                </ActionIcon> : <div></div>}
-                        </Grid.Col>
-                    </Grid>
-                    <Divider my="md" />
-                    <TableSection stid={params.id} isAdmin={props.isAdmin} />
-                </Stack>
-                <Modal opened={opened} onClose={() => handlers.close()} title="Edit image" centered>
-                    <Stack>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={convertToBase64}
-                        />
-                        <Group justify="flex-end" mt="md">
-                            <Button onClick={onUploadImage}>Upload</Button>
-                        </Group>
-                    </Stack>
-                </Modal>
-            </Stack>
+                    <Modal opened={opened} onClose={() => handlers.close()} title="Edit image" centered>
+                        <Stack>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={convertToBase64}
+                            />
+                            <Group justify="flex-end" mt="md">
+                                <Button onClick={onUploadImage}>Upload</Button>
+                            </Group>
+                        </Stack>
+                    </Modal>
+                </Stack>}
         </AppShell.Main>
     );
 
