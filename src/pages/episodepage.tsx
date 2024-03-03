@@ -101,14 +101,14 @@ export default function EpisodePage(
             .catch(e => console.log(e));
     }
 
-    const onDelete = () => {
+    const onDelete = async () => {
         setLoading(true)
         const requestOptions = {
             method: 'DELETE'
         };
-        fetch(urlDelEpisodes, requestOptions)
+        await fetch(urlDelEpisodes, requestOptions)
             .then(response => response.json())
-            .then(data => { console.log(data); setLoading(false); });
+            .then(data => { console.log(data); setLoading(false); window.location.replace(`/Dashboard/${storyid}`);});
     }
 
     const onSubmitRq = () => {
