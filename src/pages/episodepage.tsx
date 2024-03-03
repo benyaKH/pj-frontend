@@ -19,6 +19,7 @@ export default function EpisodePage(
     const urlEditEpisodes = `${mainurl}/episodes/${params.id}`
     const urlDelEpisodes = `${mainurl}/episodes/${params.id}`
     const urlGetRQtags = `${mainurl}/rqtags/${params.id}`
+    const urlRq = `${mainurl}/rqtags`
 
     const [loading, setLoading] = useState(false)
     const [popupstate, setPopupState] = useState('Edit Episode')
@@ -39,6 +40,7 @@ export default function EpisodePage(
 
 
     useEffect(() => {
+
         setLoading(true)
         const fetchEpData = async () => {
 
@@ -50,7 +52,7 @@ export default function EpisodePage(
                     setNumber(result.number); setTitle(result.episodetitle); setDes(result.description);
                     setTags(result.tags); setChars(result.characters); setLink(result.Links);
                     setStoryname(result.StoryId.storyname); setStoryid(result.StoryId._id);
-                    setLoading(false)
+
                 })
                 .catch(e => console.log(e))
         }
@@ -63,7 +65,7 @@ export default function EpisodePage(
             })
                 .then(response => response.json())
                 .then(result => {
-                    setRqTags(result)
+                    setRqTags(result); setLoading(false);
                 })
                 .catch(e => console.log(e))
         }
@@ -88,7 +90,6 @@ export default function EpisodePage(
             tags,
             characters,
             Links
-
         }
         const requestOptions = {
             method: 'PUT',
@@ -108,13 +109,12 @@ export default function EpisodePage(
         };
         await fetch(urlDelEpisodes, requestOptions)
             .then(response => response.json())
-            .then(data => { console.log(data); setLoading(false); window.location.replace(`/Dashboard/${storyid}`);});
+            .then(data => { console.log(data); setLoading(false); window.location.replace(`/Dashboard/${storyid}`); });
     }
 
-    const onSubmitRq = () => {
+    const onSubmitRq = async () => {
         setLoading(true)
-        const url = `${mainurl}/rqtags`
-        NewRq.forEach((element) => {
+        await Promise.all(NewRq.map(async (element) => {
             const payload = {
                 tag: element,
                 episodeId: params.id,
@@ -126,11 +126,12 @@ export default function EpisodePage(
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             };
-            fetch(url, requestOptions)
+            fetch(urlRq, requestOptions)
                 .then(response => response.json())
                 .then(data => console.log(data))
                 .catch(e => console.log(e))
-        })
+        })).then(() => setLoading(false))
+
     }
 
     const onConfirmRq = () => {
@@ -193,67 +194,67 @@ export default function EpisodePage(
 
     return (
         <AppShell.Main>
-
-            <Stack
-                bg="var(--mantine-color-body)"
-            >
-                <Image
-                    src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                    mah={300}
-                    alt="No way!"
-                />
-                <Stack px={rem(100)}>
-                    <Group>
-                        <Text>Episode page</Text>
-                        {props.isAdmin ?
-                            <Button variant="light" color="indigo" size="xs" radius="xl"
-                                onClick={() => { handlers.open(); setPopupState('Request Tags'); }}
-                                rightSection={
-                                    RqTags.length != 0 ?
-                                        <Badge size="xs" color="red" circle>
-                                            {RqTags.length}
-                                        </Badge> : <></>
-                                }>
-                                Request Tag
-                            </Button> : <></>}
-                    </Group>
-                    <Text size={rem(35)} fw={700}>{storyname}</Text>
-                    <Group>
-                        <Text size={rem(24)} fw={500}>Episode {number} : {episodetitle}</Text>
-                        {props.isAdmin ?
+            {loading ? <Loader color="blue" size="xl" /> :
+                <Stack
+                    bg="var(--mantine-color-body)"
+                >
+                    <Image
+                        src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+                        mah={300}
+                        alt="No way!"
+                    />
+                    <Stack px={rem(100)}>
+                        <Group>
+                            <Text>Episode page</Text>
+                            {props.isAdmin ?
+                                <Button variant="light" color="indigo" size="xs" radius="xl"
+                                    onClick={() => { handlers.open(); setPopupState('Request Tags'); }}
+                                    rightSection={
+                                        RqTags.length != 0 ?
+                                            <Badge size="xs" color="red" circle>
+                                                {RqTags.length}
+                                            </Badge> : <></>
+                                    }>
+                                    Request Tag
+                                </Button> : <></>}
+                        </Group>
+                        <Text size={rem(35)} fw={700}>{storyname}</Text>
+                        <Group>
+                            <Text size={rem(24)} fw={500}>Episode {number} : {episodetitle}</Text>
+                            {props.isAdmin ?
+                                <Group>
+                                    <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => { handlers.open(); setPopupState('Edit Episode'); }} >
+                                        <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
+                                    </ActionIcon>
+                                    <Button color="#FF6666" onClick={() => { handlers.open(); setPopupState('Delete Episode'); }}>Delete</Button>
+                                </Group>
+                                : <div></div>}
+                        </Group>
+                        <Text size={rem(14)}>{description}</Text>
+                        <Stack>
                             <Group>
-                                <ActionIcon variant="subtle" color='black' aria-label="EditName0" onClick={() => { handlers.open(); setPopupState('Edit Episode'); }} >
-                                    <IconEdit style={{ width: '130%', height: '130%' }} stroke={1.5} />
-                                </ActionIcon>
-                                <Button color="#FF6666" onClick={() => { handlers.open(); setPopupState('Delete Episode'); }}>Delete</Button>
+                                <Text size={rem(14)}>Tags</Text>
+                                {props.isAdmin ? <></> :
+                                    <Button radius="xl" variant="light" color="pink" size="xs"
+                                        onClick={() => { handlers.open(); setPopupState('Request New Tags') }}>request new tags</Button>}
                             </Group>
-                            : <div></div>}
-                    </Group>
-                    <Text size={rem(14)}>{description}</Text>
-                    <Stack>
-                        <Group>
-                            <Text size={rem(14)}>Tags</Text>
-                            {props.isAdmin ? <></> :
-                                <Button radius="xl" variant="light" color="pink" size="xs"
-                                    onClick={() => { handlers.open(); setPopupState('Request New Tags') }}>request new tags</Button>}
-                        </Group>
-                        <Group>
-                            {showtags}
-                        </Group>
+                            <Group>
+                                {showtags}
+                            </Group>
+                        </Stack>
+                        <Stack>
+                            <Text size={rem(14)}>Characters</Text>
+                            <Group>
+                                {showchars}
+                            </Group>
+                        </Stack>
+                        <Button color="#521125"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                window.location.href = Links;
+                            }}>Watch Episode</Button>
                     </Stack>
-                    <Stack>
-                        <Text size={rem(14)}>Characters</Text>
-                        <Group>
-                            {showchars}
-                        </Group>
-                    </Stack>
-                    <Button color="#521125"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            window.location.href = Links;
-                        }}>Watch Episode</Button>
-                </Stack>
-            </Stack>
+                </Stack>}
             <Modal opened={opened} onClose={() => { handlers.close() }} title={popupstate} centered>
                 <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                 {popupstate == 'Edit Episode' ?
@@ -328,7 +329,7 @@ export default function EpisodePage(
                                 </Group>
                             </Stack>
                             : popupstate == 'Request New Tags' ?
-                                <form onSubmit={onSubmitRq}>
+                                <div>
                                     <TagsInput
                                         placeholder="Enter tag"
                                         clearable
@@ -336,9 +337,9 @@ export default function EpisodePage(
                                         onChange={setNewRq}
                                     />
                                     <Group justify="flex-end" mt="md">
-                                        <Button type="submit" color="#2CB5B5">Submit</Button>
+                                        <Button color="#2CB5B5" onClick={onSubmitRq}>Submit</Button>
                                     </Group>
-                                </form>
+                                </div>
                                 : <></>
 
                 }
