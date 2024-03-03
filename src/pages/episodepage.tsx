@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, PillsInput, Pill, Checkbox, LoadingOverlay } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, Checkbox, LoadingOverlay } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
