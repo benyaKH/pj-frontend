@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 import { IconCirclePlus } from '@tabler/icons-react';
 
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Text, Stack, rem, Divider, Modal, Center, UnstyledButton, SimpleGrid, TextInput, Group, Button, NativeSelect, Loader } from '@mantine/core';
+import { AppShell, Text, Stack, rem, Divider, Modal, Center, UnstyledButton, SimpleGrid, TextInput, Group, Button, NativeSelect, Loader, LoadingOverlay } from '@mantine/core';
 import StoryCardAdmin from '../components/StoryCardAdmin';
 
 export default function DashboardPage() {
 
+    const [state, setState] = useState('')
     const [loading, setLoading] = useState(false)
     const [stories, setStories] = useState([])
     const [name, setName] = useState(() => {
@@ -16,6 +17,8 @@ export default function DashboardPage() {
     const [storyname, setStoryname] = useState('')
     const [category, setCategory] = useState('Anime')
     const [RqEp, setRqEp] = useState([])
+
+    const [opened, handlers] = useDisclosure(false);
 
     const mainurl = 'https://pj-backend.up.railway.app'
     const urlUserStory = `${mainurl}/stories/owner/${name}`
@@ -66,7 +69,7 @@ export default function DashboardPage() {
         };
         fetch(urlNewStory, requestOptions)
             .then(response => response.json())
-            .then(data => { console.log(data); setLoading(false); })
+            .then(data => { console.log(data);  setLoading(false); handlers.close();}).then(() => window.location.reload())
             .catch(e => console.log(e))
     }
 
@@ -82,13 +85,12 @@ export default function DashboardPage() {
 
 
     const Newicon = <IconCirclePlus style={{ width: rem(64), height: rem(64) }} />;
-    const [opened, { open, close }] = useDisclosure(false);
 
 
 
     return (
         <AppShell.Main>
-            {loading ? <Loader color="blue" size="xl" /> :
+            {loading&&state=='' ? <Loader color="blue" size="xl" /> :
                 <Stack
                     h={300}
                     bg="var(--mantine-color-body)"
@@ -103,7 +105,8 @@ export default function DashboardPage() {
                     <Divider my="md" />
                     <SimpleGrid cols={4}>
                         {items}
-                        <Modal opened={opened} onClose={close} title="Create new board" centered>
+                        <Modal opened={opened} onClose={() => { handlers.close() }} title="Create new board" centered>
+                            <LoadingOverlay visible={loading} loaderProps={{ children: 'Loading...' }} />
                             <form onSubmit={onSubmit}>
                                 <TextInput
                                     withAsterisk
@@ -123,13 +126,10 @@ export default function DashboardPage() {
                                 </Group>
                             </form>
                         </Modal>
-                        <UnstyledButton
-                            onClick={open}
-                        >
+                        <UnstyledButton onClick={() => { handlers.open() }}>
                             <Center>
                                 {Newicon}
                             </Center>
-
                         </UnstyledButton>
 
                     </SimpleGrid>
