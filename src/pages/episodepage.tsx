@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { useParams } from 'react-router-dom';
-import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, Checkbox, LoadingOverlay } from '@mantine/core';
+import { AppShell, Group, TextInput, rem, Image, Text, Stack, ActionIcon, Button, Modal, TagsInput, Badge, Checkbox, LoadingOverlay, Loader } from '@mantine/core';
 
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -39,7 +39,8 @@ export default function EpisodePage(
 
 
     useEffect(() => {
-        const fetchData = async () => {
+        setLoading(true)
+        const fetchEpData = async () => {
 
             await fetch(urlGetEpisodes, {
                 method: "GET"
@@ -48,14 +49,13 @@ export default function EpisodePage(
                 .then(result => {
                     setNumber(result.number); setTitle(result.episodetitle); setDes(result.description);
                     setTags(result.tags); setChars(result.characters); setLink(result.Links);
-                    setStoryname(result.StoryId.storyname); setStoryid(result.StoryId._id)
+                    setStoryname(result.StoryId.storyname); setStoryid(result.StoryId._id);
+                    setLoading(false)
                 })
                 .catch(e => console.log(e))
         }
-        fetchData()
-    }, [])
+        fetchEpData()
 
-    useEffect(() => {
         const fetchData = async () => {
 
             await fetch(urlGetRQtags, {
@@ -68,9 +68,19 @@ export default function EpisodePage(
                 .catch(e => console.log(e))
         }
         fetchData()
+
+
+        if (localStorage.getItem('openSidebarOnLoad') === 'true') {
+            handlers.open();
+            setPopupState('Request Tags')
+
+            localStorage.removeItem('openSidebarOnLoad');
+        }
     }, [])
 
+
     const onSubmit = () => {
+        setLoading(true)
         const payload = {
             number,
             episodetitle,
@@ -87,7 +97,8 @@ export default function EpisodePage(
         };
         fetch(urlEditEpisodes, requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
+            .then(data => { console.log(data); setLoading(false); })
+            .catch(e => console.log(e));
     }
 
     const onDelete = () => {
@@ -97,13 +108,13 @@ export default function EpisodePage(
         };
         fetch(urlDelEpisodes, requestOptions)
             .then(response => response.json())
-            .then(data => { console.log(data); setLoading(false);}); 
+            .then(data => { console.log(data); setLoading(false); });
     }
 
     const onSubmitRq = () => {
+        setLoading(true)
         const url = `${mainurl}/rqtags`
         NewRq.forEach((element) => {
-            console.log(element)
             const payload = {
                 tag: element,
                 episodeId: params.id,
@@ -120,23 +131,10 @@ export default function EpisodePage(
                 .then(data => console.log(data))
                 .catch(e => console.log(e))
         })
-
-        setRqTags([])
     }
 
-    useEffect(() => {
-        // This runs when the component is mounted (after the page loads).
-
-        if (localStorage.getItem('openSidebarOnLoad') === 'true') {
-            handlers.open();
-            setPopupState('Request Tags')
-
-            localStorage.removeItem('openSidebarOnLoad');
-        }
-    }, []);
-
-
     const onConfirmRq = () => {
+        setLoading(true)
         const Newtags = tags
         value.forEach((element) => {
             RqTags.forEach((tag) => {
@@ -161,6 +159,7 @@ export default function EpisodePage(
 
     }
     const onDeleteRq = () => {
+        setLoading(true)
         value.forEach((element) => {
             const urlDelRQtags = `${mainurl}/rqtags/${element}`
             const requestOptions = {
@@ -168,11 +167,13 @@ export default function EpisodePage(
             };
             fetch(urlDelRQtags, requestOptions)
                 .then(response => response.json())
-                .then(data => console.log(data));
+                .then(data => { console.log(data); setLoading(false) })
+                .then(() => {
+                    localStorage.setItem('openSidebarOnLoad', 'true');
+                    window.location.reload()
+                });
 
         })
-        localStorage.setItem('openSidebarOnLoad', 'true');
-        window.location.reload()
 
 
 
@@ -192,6 +193,7 @@ export default function EpisodePage(
 
     return (
         <AppShell.Main>
+
             <Stack
                 bg="var(--mantine-color-body)"
             >
