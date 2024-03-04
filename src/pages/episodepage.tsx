@@ -303,7 +303,7 @@ export default function EpisodePage(
                         />
 
                         <Group justify="flex-end" mt="md">
-                            <Button type="submit" onClick={() => { handlers.close() }} color="#2CB5B5">Submit</Button>
+                            <Button  onClick={() => { handlers.close() }} color="#2CB5B5">Submit</Button>
                             <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
                         </Group>
                     </form> : popupstate == 'Delete Episode' ?
@@ -312,7 +312,7 @@ export default function EpisodePage(
                             <Text>Episode {number} : {episodetitle}</Text>
                             <Text lineClamp={3}>{description}</Text>
                             <Group justify="flex-end" mt="md">
-                                <Button type="submit" onClick={onDelete} color="#2CB5B5">Submit</Button>
+                                <Button  onClick={onDelete} color="#2CB5B5">Submit</Button>
                                 <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
                             </Group>
                         </Stack>
@@ -324,8 +324,8 @@ export default function EpisodePage(
                                     </Stack>
                                 </Checkbox.Group>
                                 <Group justify="flex-end" mt="md">
-                                    <Button type="submit" onClick={onConfirmRq} color="#2CB5B5">Accept</Button>
-                                    <Button type="reset" onClick={onDeleteRq} variant="outline" color="#FF6666">Decline</Button>
+                                    <Button  onClick={onConfirmRq} color="#2CB5B5">Accept</Button>
+                                    <Button  onClick={onDeleteRq} variant="outline" color="#FF6666">Decline</Button>
                                 </Group>
                             </Stack>
                             : popupstate == 'Request New Tags' ?
