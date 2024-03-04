@@ -166,11 +166,11 @@ export default function EpisodePage(
             const requestOptions = {
                 method: 'DELETE'
             };
-            fetch(urlDelRQtags, requestOptions)
+            await fetch(urlDelRQtags, requestOptions)
                 .then(response => response.json())
                 .then(data => console.log(data))
                 .catch(e => console.log(e));
-        })).then(() => { setLoading(false); handlers.close(); })
+        })).then(() => { setLoading(false); handlers.close(); }).then(()=>window.location.reload())
 
     }
 
