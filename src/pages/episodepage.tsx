@@ -130,7 +130,7 @@ export default function EpisodePage(
                 .then(response => response.json())
                 .then(data => console.log(data))
                 .catch(e => console.log(e))
-        })).then(() => setLoading(false))
+        })).then(() => { setLoading(false); handlers.close(); setNewRq([]) })
 
     }
 
@@ -154,29 +154,23 @@ export default function EpisodePage(
         };
         fetch(urlEditEpisodes, requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
+            .then(data => { console.log(data); setLoading(false) });
 
         onDeleteRq()
 
     }
-    const onDeleteRq = () => {
+    const onDeleteRq = async () => {
         setLoading(true)
-        value.forEach((element) => {
+        await Promise.all(value.map(async (element) => {
             const urlDelRQtags = `${mainurl}/rqtags/${element}`
             const requestOptions = {
                 method: 'DELETE'
             };
             fetch(urlDelRQtags, requestOptions)
                 .then(response => response.json())
-                .then(data => { console.log(data); setLoading(false) })
-                .then(() => {
-                    localStorage.setItem('openSidebarOnLoad', 'true');
-                    window.location.reload()
-                });
-
-        })
-
-
+                .then(data => console.log(data))
+                .catch(e => console.log(e));
+        })).then(() => { setLoading(false); handlers.close(); })
 
     }
 
@@ -303,7 +297,7 @@ export default function EpisodePage(
                         />
 
                         <Group justify="flex-end" mt="md">
-                            <Button  onClick={() => { handlers.close() }} color="#2CB5B5">Submit</Button>
+                            <Button onClick={() => { handlers.close() }} color="#2CB5B5">Submit</Button>
                             <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
                         </Group>
                     </form> : popupstate == 'Delete Episode' ?
@@ -312,7 +306,7 @@ export default function EpisodePage(
                             <Text>Episode {number} : {episodetitle}</Text>
                             <Text lineClamp={3}>{description}</Text>
                             <Group justify="flex-end" mt="md">
-                                <Button  onClick={onDelete} color="#2CB5B5">Submit</Button>
+                                <Button onClick={onDelete} color="#2CB5B5">Submit</Button>
                                 <Button type="reset" variant="outline" color="#FF6666">Cancle</Button>
                             </Group>
                         </Stack>
@@ -324,8 +318,8 @@ export default function EpisodePage(
                                     </Stack>
                                 </Checkbox.Group>
                                 <Group justify="flex-end" mt="md">
-                                    <Button  onClick={onConfirmRq} color="#2CB5B5">Accept</Button>
-                                    <Button  onClick={onDeleteRq} variant="outline" color="#FF6666">Decline</Button>
+                                    <Button onClick={onConfirmRq} color="#2CB5B5">Accept</Button>
+                                    <Button onClick={onDeleteRq} variant="outline" color="#FF6666">Decline</Button>
                                 </Group>
                             </Stack>
                             : popupstate == 'Request New Tags' ?
