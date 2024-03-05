@@ -48,9 +48,9 @@ export default function EpisodeTable(
     }
 
     function GeturlEp() {
-        if(key.length==0){
+        if (key.length == 0) {
             return urlGetEpisodes
-        }else{return urlGetKeyEpisodes}
+        } else { return urlGetKeyEpisodes }
     }
     // get episodes
     useEffect(() => {
@@ -70,12 +70,6 @@ export default function EpisodeTable(
 
 
 
-    }, [key])
-
-    useEffect(() => {
-        if(key.length==0){
-            console.log('no keyword')
-        }else{console.log(key)}
     }, [key])
 
     // get episode requests
@@ -101,7 +95,12 @@ export default function EpisodeTable(
             <div className="flex justify-content-end">
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
+                    <TagsInput
+                        placeholder="Pick tag from list"
+                        maxDropdownHeight={200}
+                        value={key}
+                        onChange={setKey}
+                    />
                 </span>
             </div>
         );
@@ -135,13 +134,7 @@ export default function EpisodeTable(
 
     return (
 
-        <>
-            <TagsInput
-                placeholder="Pick tag from list"
-                maxDropdownHeight={200}
-                value={key}
-                onChange={setKey}
-            />
+        
             <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
                 dataKey="_id" filters={filters} filterDisplay="row" showGridlines
                 selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
@@ -152,7 +145,7 @@ export default function EpisodeTable(
                 <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
             </DataTable>
 
-        </>
+        
 
     );
 
