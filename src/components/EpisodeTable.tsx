@@ -1,7 +1,7 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
-import { Badge, Group, TagsInput, Text } from '@mantine/core';
+import { Badge, Button, Group, TagsInput, Text } from '@mantine/core';
 import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 
 import { FilterMatchMode } from 'primereact/api';
@@ -114,38 +114,48 @@ export default function EpisodeTable(
 
     const header = renderHeader();
 
-    const tagBodyTemplate = (episodes: { tags: any[]; }) => {
-        return episodes.tags.map((tag) => (
-            <Badge color="#48E1E1">{tag}</Badge>))
+    const tagBodyTemplate = (episodes: {
+        _id: never; tags: any[]; 
+}) => {
+        return <Group>
+            {props.isAdmin &&
+                RqEp.find((element) => element == episodes._id) != undefined &&
+                <Badge size="xs" color="red" >
+                    New Request!
+                </Badge>}
+            {episodes.tags.map((tag) => (
+                <Badge color="#48E1E1">{tag}</Badge>))}
+        </Group>
 
     };
 
-    const titleTemplate = (episodes: { episodetitle: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; _id: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => {
+    const desTemplate = (episodes: {
+        Links: string; description: string  | null | undefined; _id: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; 
+}) => {
         return <Group>
-            <Text>{episodes.episodetitle}</Text>
-            {props.isAdmin ?
-                RqEp.find((element) => element == episodes._id) != undefined ?
-                    <Badge size="xs" color="red" >
-                        New Request!
-                    </Badge> : <div></div> : <div></div>}
+            <Text>{episodes.description}</Text>
+            <Button onClick={(e) => {
+                                e.preventDefault();
+                                window.location.href = episodes.Links;
+                            }}>{">>"}</Button>
         </Group>
 
     };
 
     return (
 
-        
-            <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-                dataKey="_id" filters={filters} filterDisplay="row" showGridlines
-                selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
-                globalFilterFields={['number', 'episodetitle', 'description', 'tags']} header={header} emptyMessage="No episodes found.">
-                <Column key='number' field='number' header='No.' sortable />
-                <Column key='episodetitle' field='episodetitle' body={titleTemplate} header='Title' sortable />
-                <Column key='description' field='description' header='Description' sortable />
-                <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
-            </DataTable>
 
-        
+        <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+            dataKey="_id" filters={filters} filterDisplay="row" showGridlines
+            selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
+            globalFilterFields={['number', 'episodetitle', 'description', 'tags']} header={header} emptyMessage="No episodes found.">
+            <Column key='number' field='number' header='No.' sortable />
+            <Column key='episodetitle' field='episodetitle'  header='Title' sortable />
+            <Column key='description' field='description' body={desTemplate} header='Description' sortable />
+            <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
+        </DataTable>
+
+
 
     );
 
