@@ -31,11 +31,7 @@ export default function TableSection(
     const [StoryId, setStoryId] = useState(props.stid)
     const [newChoices, setNewChoices] = useState(true)
 
-    const [key, setKey] = useState<string[]>([]);
 
-    const [state, setState] = useState('allEp')
-
-    const mainurl = 'https://pj-backend.up.railway.app/'
 
     const urlNewEpisodes = `https://pj-backend.up.railway.app/episodes`
 
@@ -109,13 +105,7 @@ export default function TableSection(
 
     // const Rqtags =  [...new Set(array.map((item) => item.age))];
 
-    const onSearchKeyword = () => {
-        if (key.length != 0) {
-            setState('search keyword')
-        } else {
-            setState('allEp')
-        }
-    }
+    
 
 
 
@@ -140,7 +130,7 @@ export default function TableSection(
                                     </Anchor>
                                 </Group>
                                 {newChoices ?
-                                    <form onSubmit={ onSubmitNew }>
+                                    <form onSubmit={onSubmitNew}>
                                         <TextInput
                                             withAsterisk
                                             label="No."
@@ -205,24 +195,9 @@ export default function TableSection(
                             <ActionIcon variant="subtle" color='black' aria-label="EditDes" onClick={() => { handlers.open(); setPopupState('New Episode'); }}>
                                 <IconNewSection style={{ width: '130%', height: '130%' }} stroke={1.5} />
                             </ActionIcon> : <div></div>}
-                        {/* search keyword */}
-                        <Group>
-                            <TagsInput
-                                placeholder="Pick tag from list"
-                                maxDropdownHeight={200}
-                                value={key}
-                                onChange={setKey}
-                            />
-                            <ActionIcon variant="subtle" radius="xl" size="lg" color='black' aria-label="search"
-                                onClick={onSearchKeyword}>
-                                <IconSearch style={{ width: '70%', height: '70%' }} stroke={2} />
-                            </ActionIcon>
-                        </Group>
                     </Group>
                     {/* Table */}
-                    {/* <Text>{state}</Text> */}
-                    {state == 'allEp' ?
-                        <EpisodeTable stid={props.stid} isAdmin={props.isAdmin} /> : <ResultTable stid={props.stid} isAdmin={props.isAdmin} keyword={key} />}
+                    <EpisodeTable stid={props.stid} isAdmin={props.isAdmin} />
                 </div>}
 
         </div>
