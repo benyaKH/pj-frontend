@@ -1,7 +1,7 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
-import {  Badge, Group,  Text } from '@mantine/core';
+import { Badge, Group, TagsInput, Text } from '@mantine/core';
 import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 
 import { FilterMatchMode } from 'primereact/api';
@@ -22,10 +22,10 @@ export default function EpisodeTable(
 
     const [episodes, setEpisodes] = useState([])
     const [RqEp, setRqEp] = useState([])
+    const [key, setKey] = useState<string[]>([]);
 
-    
 
-
+    const urlGetKeyEpisodes = `https://pj-backend.up.railway.app/episodes/search/${props.stid}?keyword=${props.keyword}`
     const urlGetEpisodes = `https://pj-backend.up.railway.app/episodes/story/${props.stid}`
     const urltagRequest = `https://pj-backend.up.railway.app/rqtags/lenght/${props.stid}`
 
@@ -63,6 +63,10 @@ export default function EpisodeTable(
 
     }, [])
 
+    useEffect(() => {
+        console.log(key)
+    }, [key])
+
     // get episode requests
     useEffect(() => {
         const fetchData = async () => {
@@ -78,7 +82,7 @@ export default function EpisodeTable(
     }, [])
 
 
-   
+
 
 
     const renderHeader = () => {
@@ -120,6 +124,13 @@ export default function EpisodeTable(
 
     return (
 
+        <>
+            <TagsInput
+                placeholder="Pick tag from list"
+                maxDropdownHeight={200}
+                value={key}
+                onChange={setKey}
+            />
             <DataTable value={episodes} removableSort paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
                 dataKey="_id" filters={filters} filterDisplay="row" showGridlines
                 selectionMode="single" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} onClick={onClick}
@@ -129,8 +140,8 @@ export default function EpisodeTable(
                 <Column key='description' field='description' header='Description' sortable />
                 <Column key='tags' field='tags' header='Tags' body={tagBodyTemplate} sortable />
             </DataTable>
-        
 
+        </>
 
     );
 
