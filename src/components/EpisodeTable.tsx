@@ -25,7 +25,7 @@ export default function EpisodeTable(
     const [key, setKey] = useState<string[]>([]);
 
 
-    const urlGetKeyEpisodes = `https://pj-backend.up.railway.app/episodes/search/${props.stid}?keyword=${props.keyword}`
+    const urlGetKeyEpisodes = `https://pj-backend.up.railway.app/episodes/search/${props.stid}?keyword=${key}`
     const urlGetEpisodes = `https://pj-backend.up.railway.app/episodes/story/${props.stid}`
     const urltagRequest = `https://pj-backend.up.railway.app/rqtags/lenght/${props.stid}`
 
@@ -46,11 +46,20 @@ export default function EpisodeTable(
             return `/Dashborad/Episode/${id}`
         } else return `/Episode/${id}`
     }
+
+    function GeturlEp() {
+        if(key.length==0){
+            return urlGetEpisodes
+        }else{return urlGetKeyEpisodes}
+    }
     // get episodes
     useEffect(() => {
+
+        const Geturl = GeturlEp()
+
         const fetchData = async () => {
 
-            await fetch(urlGetEpisodes, {
+            await fetch(Geturl, {
                 method: "GET"
             })
                 .then(response => response.json())
@@ -61,10 +70,12 @@ export default function EpisodeTable(
 
 
 
-    }, [])
+    }, [key])
 
     useEffect(() => {
-        console.log(key)
+        if(key.length==0){
+            console.log('no keyword')
+        }else{console.log(key)}
     }, [key])
 
     // get episode requests
