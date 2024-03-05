@@ -117,7 +117,7 @@ export default function EpisodeTable(
     const tagBodyTemplate = (episodes: {
         _id: never; tags: any[]; 
 }) => {
-        return <Group>
+        return <Group w={200}>
             {props.isAdmin &&
                 RqEp.find((element) => element == episodes._id) != undefined &&
                 <Badge size="xs" color="red" >
@@ -132,7 +132,7 @@ export default function EpisodeTable(
     const desTemplate = (episodes: {
         Links: string; description: string  | null | undefined; _id: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; 
 }) => {
-        return <Group>
+        return <Group w={500}>
             <Text>{episodes.description}</Text>
             <Button onClick={(e) => {
                                 e.preventDefault();
