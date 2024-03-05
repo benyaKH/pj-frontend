@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-BuildCommand = "npm install --legacy-peer-deps"
+BuildCommand = "npm ci --legacy-peer-deps"
 
 [deploy]
 startCommand = "npm start"
