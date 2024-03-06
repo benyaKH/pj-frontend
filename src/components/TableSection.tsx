@@ -1,13 +1,12 @@
 
 import '@mantine/core/styles.css';
-import { IconNewSection, IconSearch } from '@tabler/icons-react';
+import { IconNewSection} from '@tabler/icons-react';
 import { ActionIcon, Anchor, Button, Group, Modal, Stack, TagsInput, Text, TextInput, rem, Loader } from '@mantine/core';
 import { useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import * as XLSX from "xlsx";
 
 import EpisodeTable from './EpisodeTable';
-import ResultTable from './ResultTable';
 
 export default function TableSection(
     props: {

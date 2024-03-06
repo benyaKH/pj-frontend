@@ -3,15 +3,15 @@ import { useState, useEffect } from 'react';
 import { IconCirclePlus } from '@tabler/icons-react';
 
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Text, Stack, rem, Divider, Modal, Center, UnstyledButton, SimpleGrid, TextInput, Group, Button, NativeSelect, Loader, LoadingOverlay } from '@mantine/core';
+import { AppShell, Text, Stack, rem, Divider, Modal, Center, UnstyledButton, SimpleGrid, 
+    TextInput, Group, Button, NativeSelect, Loader, LoadingOverlay } from '@mantine/core';
 import StoryCardAdmin from '../components/StoryCardAdmin';
 
 export default function DashboardPage() {
 
-    const [state, setState] = useState('')
     const [loading, setLoading] = useState(false)
     const [stories, setStories] = useState([])
-    const [name, setName] = useState(() => {
+    const [name] = useState(() => {
         return localStorage.getItem('username')
     })
     const [storyname, setStoryname] = useState('')
@@ -90,7 +90,7 @@ export default function DashboardPage() {
 
     return (
         <AppShell.Main>
-            {loading&&state=='' ? <Loader color="blue" size="xl" /> :
+            {loading ? <Loader color="blue" size="xl" /> :
                 <Stack
                     h={300}
                     bg="var(--mantine-color-body)"

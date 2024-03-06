@@ -25,7 +25,6 @@ export default function StoryPage(
 
     const urlStory = `${mainurl}/stories/${params.id}`
     const urleditStory = `${mainurl}/stories/${params.id}`
-    const urldeleteStory = `${mainurl}/stories/${params.id}`
 
     const [storyname, setStoryname] = useState('')
     const [description, setDescription] = useState('')
@@ -34,31 +33,6 @@ export default function StoryPage(
     const [IsEditDEs, setIsEditDes] = useState(false)
 
     const [image, setImage] = useState("")
-
-    const handleProcedureContentChange = (content: any) => {
-        setDescription(content);
-    };
-    const modules = {
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            ["bold", "italic", "underline", "strike", "blockquote"],
-            [{ align: ["right", "center", "justify"] }],
-            [{ list: "ordered" }, { list: "bullet" }],
-            ["link"]
-        ]
-    };
-    const formats = [
-        "header",
-        "bold",
-        "italic",
-        "underline",
-        "strike",
-        "blockquote",
-        "list",
-        "bullet",
-        "link",
-        "align"
-    ];
 
     useEffect(() => {
         setLoading(true)
@@ -82,7 +56,9 @@ export default function StoryPage(
         var reader = new FileReader();
         reader.readAsDataURL(e.target.files[0]);
         reader.onload = () => {
-            setImage(reader.result)
+            if(typeof(reader.result)=='string'){
+                setImage(reader.result)
+            }
         };
         reader.onerror = error => {
             console.log("Error:", error)

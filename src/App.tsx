@@ -7,13 +7,12 @@ import { Route, Routes } from 'react-router-dom';
 import { IconUserCircle, IconCategory2 } from '@tabler/icons-react';
 
 import { useDisclosure } from '@mantine/hooks';
-import { MantineProvider, AppShell, Burger, Group, rem, UnstyledButton, Menu, Stack, Anchor } from '@mantine/core';
+import { MantineProvider, AppShell, Burger, Group, rem, UnstyledButton, Menu, Anchor } from '@mantine/core';
 import MainPage from './pages/main';
 import DashboardPage from './pages/dashboard';
 import StoryPage from './pages/storypage';
 import CategoryPage from './pages/category';
 import EpisodePage from './pages/episodepage';
-import SearchPage from './pages/resultpage';
 import { useState } from 'react';
 import LoginPage from './pages/loginpage';
 
@@ -24,17 +23,9 @@ export default function App() {
 
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
-  const [name, setName] = useState(() => {
+  const [name] = useState(() => {
     return localStorage.getItem('username')
   })
-
-  const logOut = () => {
-    localStorage.removeItem("username");
-    window.location.href = "/";
-  }
-
-
-  const clientId = "708607628638-b2883fsl4fnpomcqh7uadlr0ae36l8n6.apps.googleusercontent.com"
 
   return (
     <MantineProvider
@@ -156,7 +147,6 @@ export default function App() {
           <Route path='/Story/:id' element={<StoryPage isAdmin={false} />}></Route>
           <Route path='/Dashborad/Episode/:id' element={<EpisodePage isAdmin={true} />}></Route>
           <Route path='/Episode/:id' element={<EpisodePage isAdmin={false} />}></Route>
-          <Route path='/Search/:id' element={<SearchPage />}></Route>
         </Routes>
 
       </AppShell>
