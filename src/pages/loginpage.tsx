@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css';
 
 import { AppShell, Box, Button, Card, rem, Stack, Text, } from '@mantine/core';
-import { GoogleLogin, GoogleLogout } from 'react-google-login'
+import { GoogleLogin } from '@react-oauth/google';
 import { gapi } from 'gapi-script'
 import { useEffect, useState } from 'react';
 
@@ -16,15 +16,15 @@ export default function LoginPage() {
 
     const clientId = "708607628638-b2883fsl4fnpomcqh7uadlr0ae36l8n6.apps.googleusercontent.com"
 
-    useEffect(() => {
-        const intitClient = () => {
-            gapi.client.init({
-                clientId: clientId,
-                scope: ''
-            })
-        }
-        gapi.load("client:auth2", intitClient)
-    }, [])
+    // useEffect(() => {
+    //     const intitClient = () => {
+    //         gapi.client.init({
+    //             clientId: clientId,
+    //             scope: ''
+    //         })
+    //     }
+    //     gapi.load("client:auth2", intitClient)
+    // }, [])
 
     const onSuccess = (res: any) => {
         window.location.href = '/'
@@ -52,8 +52,16 @@ export default function LoginPage() {
                             Login page
                         </Text>
                     </Card.Section>
-                    
-                    {name ?
+                    <GoogleLogin
+                        onSuccess={credentialResponse => {
+                            console.log(credentialResponse);
+                        }}
+                        onError={() => {
+                            console.log('Login Failed');
+                        }}
+                    />
+
+                    {/* {name ?
                         <Box py={rem(80)}>
                             <GoogleLogout
                                 clientId={clientId}
@@ -75,7 +83,7 @@ export default function LoginPage() {
                                 onFailure={onFailure}
                                 cookiePolicy='single_host_origin'
                                 isSignedIn={true} />
-                        </Box>}
+                        </Box>} */}
                 </Card>
 
             </Stack>
