@@ -1,20 +1,13 @@
 import '@mantine/core/styles.css';
 
-import { AppShell, Box, Button, Card, rem, Stack, Text, } from '@mantine/core';
+import { AppShell, Card, rem, Stack, Text, } from '@mantine/core';
 import { GoogleLogin } from '@react-oauth/google';
-import { gapi } from 'gapi-script'
-import { useEffect, useState } from 'react';
 
-import { IconBrandGoogleFilled } from '@tabler/icons-react';
+
 
 export default function LoginPage() {
 
-    const [profile, setProfile] = useState(null)
-    const [name, setName] = useState(() => {
-        return localStorage.getItem('username')
-    })
 
-    const clientId = "708607628638-b2883fsl4fnpomcqh7uadlr0ae36l8n6.apps.googleusercontent.com"
 
     // useEffect(() => {
     //     const intitClient = () => {
@@ -26,22 +19,6 @@ export default function LoginPage() {
     //     gapi.load("client:auth2", intitClient)
     // }, [])
 
-    const onSuccess = (res: any) => {
-        window.location.href = '/'
-        localStorage.setItem('username', res.profileObj.googleId)
-        console.log('success', res)
-    }
-
-    const onFailure = (res: any) => {
-        console.log('failed', res)
-    }
-
-    const onLogout = () => {
-        setName(null)
-        localStorage.removeItem('username')
-    }
-
-    const icon = <IconBrandGoogleFilled size={14} />;
 
     return (
         <AppShell.Main>
