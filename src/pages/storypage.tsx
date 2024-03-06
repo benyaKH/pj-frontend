@@ -5,12 +5,10 @@ import { AppShell, Group, TextInput, rem, Text, Stack, Divider, ActionIcon, Butt
 import { IconEdit } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
-import ReactQuill from "react-quill";
-
-import "react-quill/dist/quill.snow.css";
 
 import TableSection from '../components/TableSection';
 import { useDisclosure } from '@mantine/hooks';
+import TextEditor from '../components/TextEditor';
 
 export default function StoryPage(
     props: {
@@ -198,13 +196,7 @@ export default function StoryPage(
 
                         <Grid columns={9}>
                             <Grid.Col span={8}> {IsEditDEs ?
-                                <ReactQuill
-                                    theme="snow"
-                                    modules={modules}
-                                    formats={formats}
-                                    value={description}
-                                    onChange={handleProcedureContentChange}
-                                /> :
+                                <TextEditor/> :
 
                                 <div dangerouslySetInnerHTML={{ __html: description }} />
 

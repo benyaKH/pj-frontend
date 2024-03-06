@@ -3,9 +3,7 @@ import { Column } from 'primereact/column';
 import '@mantine/core/styles.css';
 import { Badge, Button, Group, TagsInput, Text } from '@mantine/core';
 import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
-
 import { FilterMatchMode } from 'primereact/api';
-import { InputText } from 'primereact/inputtext';
 
 
 export default function EpisodeTable(
@@ -17,7 +15,6 @@ export default function EpisodeTable(
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
-    const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState(null);
 
     const [episodes, setEpisodes] = useState([])
@@ -28,17 +25,6 @@ export default function EpisodeTable(
     const urlGetKeyEpisodes = `https://pj-backend.up.railway.app/episodes/search/${props.stid}?keyword=${key}`
     const urlGetEpisodes = `https://pj-backend.up.railway.app/episodes/story/${props.stid}`
     const urltagRequest = `https://pj-backend.up.railway.app/rqtags/lenght/${props.stid}`
-
-
-    const onGlobalFilterChange = (e: { target: { value: any; }; }) => {
-        const value = e.target.value;
-        let _filters = { ...filters };
-
-        _filters['global'].value = value;
-
-        setFilters(_filters);
-        setGlobalFilterValue(value);
-    };
 
 
     function urlherf(id: any) {

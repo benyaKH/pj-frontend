@@ -1,6 +1,7 @@
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/core/styles.css';
+import '@mantine/tiptap/styles.css';
 import { Route, Routes } from 'react-router-dom';
 
 import { IconUserCircle, IconCategory2 } from '@tabler/icons-react';
@@ -13,7 +14,7 @@ import StoryPage from './pages/storypage';
 import CategoryPage from './pages/category';
 import EpisodePage from './pages/episodepage';
 import SearchPage from './pages/resultpage';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import LoginPage from './pages/loginpage';
 import { GoogleLogout } from 'react-google-login';
 
@@ -23,7 +24,6 @@ export default function App() {
   const Usericon = <IconUserCircle style={{ width: rem(25), height: rem(25) }} />;
 
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [IsLogin, setIsLogin] = useState(false);
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
   const [name, setName] = useState(() => {
     return localStorage.getItem('username')
