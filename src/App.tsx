@@ -16,7 +16,6 @@ import EpisodePage from './pages/episodepage';
 import SearchPage from './pages/resultpage';
 import { useState } from 'react';
 import LoginPage from './pages/loginpage';
-import { GoogleLogout } from 'react-google-login';
 
 export default function App() {
 
@@ -109,7 +108,7 @@ export default function App() {
                         veiw profile
                       </Menu.Item>
 
-                      <GoogleLogout
+                      {/* <GoogleLogout
                         render={renderProps => (
                           <Menu.Item
                             component="a"
@@ -120,7 +119,7 @@ export default function App() {
                         )}
                         clientId={clientId}
                         buttonText='Log out'
-                        onLogoutSuccess={logOut} />
+                        onLogoutSuccess={logOut} /> */}
 
                     </div>
                     :
