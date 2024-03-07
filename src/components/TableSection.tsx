@@ -19,7 +19,7 @@ export default function TableSection(
     const [popupstate, setPopupState] = useState('New Episode')
     const [loading, setLoading] = useState(false)
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<any[]>([])
 
     const [number, setNumber] = useState('')
     const [episodetitle, setTitle] = useState('')
@@ -76,7 +76,7 @@ export default function TableSection(
         setLoading(true)
         data.forEach((element) => {
             if (element['Tags'] != undefined) {
-                element['Tags'] = element['Tags'].split(',')
+                element['Tags'] = element.Tags.split(',')
             }
             if (element['Characters/Guest'] != undefined) {
                 element['Characters/Guest'] = element['Characters/Guest'].split(',')
