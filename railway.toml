@@ -3,7 +3,7 @@ builder = "NIXPACKS"
 BuildCommand = "npm ci --legacy-peer-deps"
 
 [deploy]
-startCommand = "npm run start"
+startCommand = "npm start"
 numReplicas = 1
 sleepApplication = false
 restartPolicyType = "ON_FAILURE"
