@@ -11,11 +11,12 @@ export default function EpisodeTable(
         stid: string | undefined;
         isAdmin: boolean
     }) {
+        let selected: any[] = [];
 
     const [filters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [selectedCustomer, setSelectedCustomer] = useState<any[]>( selected);
 
     const [episodes, setEpisodes] = useState([])
     const [RqEp, setRqEp] = useState([])
@@ -94,7 +95,7 @@ export default function EpisodeTable(
 
     const onClick = () => {
         if (selectedCustomer != null) {
-            window.location.href = urlherf(selectedCustomer['_id'])
+            window.location.href = urlherf(selectedCustomer['_id'as keyof typeof selectedCustomer])
         }
     };
 
