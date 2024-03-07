@@ -27,7 +27,7 @@ export default function TableSection(
     const [tags, setTags] = useState<string[]>([]);
     const [characters, setChars] = useState<string[]>([]);
     const [Links, setLink] = useState('')
-    const [StoryId, setStoryId] = useState(props.stid)
+    const [StoryId] = useState(props.stid)
     const [newChoices, setNewChoices] = useState(true)
 
 
